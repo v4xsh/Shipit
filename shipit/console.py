@@ -8,13 +8,15 @@ class Oops(Exception):
 
 def setup():
     for stream in (sys.stdout, sys.stderr):
-        if hasattr(stream, "reconfigure"):
+        if hasattr(stream, "reconfigure") and stream.encoding.lower() != "utf-8":
             stream.reconfigure(encoding="utf-8", errors="replace")
 
 
 def say(msg):
+    setup()  # cheap, and a stray emoji can never crash a demo
     print(msg, flush=True)
 
 
 def warn(msg):
+    setup()
     print(f"  ~ {msg}", file=sys.stderr, flush=True)

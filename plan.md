@@ -35,12 +35,14 @@ Scratched items and `changes` stay in the result so the board can animate them.
 - Names map to logins: exact login/name/alias, then fuzzy (difflib) on first names.
 - Bad JSON → retry once → keyword splitter fallback. Network timeout → keyword splitter.
 
-## 4. Live board
+## 4. Live board ✅
 - Tool serves one HTML file (no framework, dark theme) on localhost; server-sent events
   push items as the parse returns. Columns Done / Blocked / Next; cards slide in, quote the
   spoken line, show assignee + GitHub avatar, label colour, deadline.
 - Corrections animate: scratched cards fade out, reassigned cards swap avatar.
 - An Agent column (filled in step 7) shows branch, tests, PR status.
+- Footer receipt counts up items, words and minutes saved.
+- `--replay` plays the three recorded standups through the board for demos.
 
 ## 5. Confirm card and GitHub actions
 - Terminal confirm card; nothing touches GitHub before "yes". All calls go via `gh`.

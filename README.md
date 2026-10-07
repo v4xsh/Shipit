@@ -26,9 +26,12 @@ Shipit is a command-line tool for developers. Instead of typing a standup, you t
    or pass a meeting transcript with `--from-notes notes.txt`.
 5. Groq (`openai/gpt-oss-120b`) turns it into **done / blocked / next** items, each with a
    title, label (bug/feature/infra/core), assignee login, deadline, dependencies and the exact words said.
-6. *(coming)* A live dark-theme board on localhost, a confirm card, then GitHub issues,
-   labels, milestones, closes, a receipt with time saved, and `--agent N` to hand the next
-   issues to Claude Code. See [plan.md](plan.md).
+6. A live board opens in your browser (localhost, one HTML file, no framework): Done, Blocked,
+   Next and Agent columns; cards slide in as the parse returns, quoting what you said.
+   Corrections play out on screen: scratched cards strike, shake and fade, reassigned avatars
+   flip, changed deadlines pulse. A receipt counts up the minutes saved.
+7. *(coming)* A confirm card, then GitHub issues, labels, milestones, closes, workload check,
+   and `--agent N` to hand the next issues to Claude Code. See [plan.md](plan.md).
 
 ## Setup
 
@@ -37,6 +40,9 @@ cp .env.example .env                 # add GROQ_API_KEY; .env is gitignored
 gh auth login
 python -m shipit                     # dictate with Wispr Flow, empty line to finish
 python -m shipit --text "I fixed login. Milap takes the balance bug by Friday."
+python -m shipit --from-notes meeting.txt   # one meeting, issues for everyone mentioned
+python -m shipit --replay            # demo: three recorded standups on the board, no keys
+python -m shipit --no-board          # terminal only
 ```
 
 ## Development
