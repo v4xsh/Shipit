@@ -63,13 +63,13 @@ Scratched items and `changes` stay in the result so the board can animate them.
 - Workload check: if someone has clearly more open issues than the rest, say so and let me
   move one by voice.
 
-## 7. Agent
+## 7. Agent ✅
 - `--agent N` runs `claude -p` on the top N next issues in parallel, each on its own branch,
   prompt includes the issue body. Opens a PR via `gh` quoting the spoken line, streams
   status to the board's Agent column.
 - Windows: call `claude.cmd` with `shell=True`, `encoding="utf-8"`.
 
-## 8. Debug, review, docs site
+## 8. Debug ✅, review ✅, docs site
 - `--debug`: ramble about a bug; each hypothesis becomes a card, then agent runs.
 - `--review PR`: speak a review, post it as a PR comment, rerun the agent to address it.
 - `docs/` static site for GitHub Pages.

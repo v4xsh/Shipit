@@ -13,9 +13,9 @@ class Board:
         if open_browser:
             webbrowser.open(self.url)
 
-    def run(self, repo, team, replay=False):
+    def run(self, repo, team, replay=False, mode="standup"):
         self.hub.reset()
-        self.hub.publish("meta", {"repo": repo, "replay": replay, "me": team["me"],
+        self.hub.publish("meta", {"repo": repo, "replay": replay, "mode": mode, "me": team["me"],
                                   "team": team["members"]})
 
     def status(self, state):
@@ -35,6 +35,10 @@ class Board:
 
     def issue(self, id, number, url):
         self.hub.publish("issue", {"id": id, "number": number, "url": url})
+
+    def agent(self, status):
+        """Agent column: {key, title, status, detail, url}."""
+        self.hub.publish("agent", status)
 
     def toast(self, text):
         self.hub.publish("toast", text)

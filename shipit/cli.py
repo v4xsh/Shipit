@@ -4,9 +4,9 @@ import datetime
 import sys
 from pathlib import Path
 
-from . import cards, env, flow, gitlog, live, parser, proc, replay, repo, ship, state, team
+from . import agent, cards, debug, env, flow, gitlog, live, parser, proc, replay, repo, review, ship, state, team
 from .console import Oops, say, setup, warn
-from .github import Gh
+from .github import Gh, GhError
 
 
 def args(argv):
@@ -15,6 +15,10 @@ def args(argv):
     p.add_argument("--from-notes", metavar="FILE", help="a meeting transcript file")
     p.add_argument("--replay", action="store_true", help="play the recorded demo standups")
     p.add_argument("--dry-run", action="store_true", help="print the gh commands, don't run them")
+    p.add_argument("--agent", type=int, metavar="N", default=0,
+                   help="after shipping, Claude Code works your top N next issues")
+    p.add_argument("--debug", action="store_true", help="ramble about a bug; agents test each hypothesis")
+    p.add_argument("--review", type=int, metavar="PR", help="speak a review of a pull request")
     p.add_argument("--no-board", action="store_true", help="don't open the live board")
     p.add_argument("--port", type=int, default=7878, help="board port (default 7878)")
     return p.parse_args(argv)
@@ -67,15 +71,43 @@ def hear(opts, root, crew, before, board, open_titles=()):
     return transcript, result["items"]
 
 
-def run(opts, board):
+def start(opts, board, mode="standup"):
     root = repo.root()
     env.load(root)
     slug = repo.origin(root)
     crew = team.load(root, slug)
     say(f"Shipit · {slug} · {len(crew['members'])} on the team")
-    board.run(slug, crew)
+    board.run(slug, crew, mode=mode)
+    return root, crew, Gh(slug, dry_run=opts.dry_run)
+
+
+def spoken(opts, board, prompt):
+    say(prompt)
+    board.status("listening")
+    text = listen(opts).strip()
+    if not text:
+        raise Oops("Nothing said.")
+    board.transcript(text)
+    return text
+
+
+def run_debug(opts, board):
+    root, crew, gh = start(opts, board, mode="debug")
+    ramble = spoken(opts, board, "Ramble about the bug: what you saw, what you suspect.")
+    debug.run(ramble, root, gh, board)
+
+
+def run_review(opts, board):
+    root, crew, gh = start(opts, board, mode="review")
+    pr = gh.pr(opts.review)
+    say(f"PR #{pr['number']} {pr['title']}  {pr['url']}")
+    said = spoken(opts, board, "Speak your review:")
+    review.run(opts.review, said, root, gh, board)
+
+
+def run(opts, board):
+    root, crew, gh = start(opts, board)
     before = state.load(root)
-    gh = Gh(slug, dry_run=opts.dry_run)
     open_issues = flow.read_open(gh)
     titles = [i["title"] for i in open_issues if i["title"] != ship.LOG_TITLE]
     transcript, found = hear(opts, root, crew, before, board, titles)
@@ -91,6 +123,8 @@ def run(opts, board):
         state.record(root, before, gitlog.head(root), stats, datetime.datetime.now().isoformat())
     ids = {n: i["id"] for i, n in done["opened"] + done["duplicates"]}
     flow.balance(gh, crew, board, ids, opened=done["opened"])
+    if opts.agent:
+        agent.run_all(agent.pick(done, found, crew["me"], opts.agent), root, gh, board)
     return done
 
 
@@ -99,9 +133,19 @@ def main(argv=None):
     opts = args(argv)
     try:
         board = open_board(opts)
-        replay.run(board) if opts.replay else run(opts, board)
+        if opts.replay:
+            replay.run(board)
+        elif opts.debug:
+            run_debug(opts, board)
+        elif opts.review:
+            run_review(opts, board)
+        else:
+            run(opts, board)
         if board.url and sys.stdin.isatty():
             input(f"\nBoard is live at {board.url}  Press Enter to finish. ")
+    except GhError as e:
+        warn(f"GitHub said no: {e}")
+        return 1
     except Oops as e:
         warn(str(e))
         return 1

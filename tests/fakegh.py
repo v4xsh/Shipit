@@ -8,6 +8,7 @@ class FakeGitHub:
                                      "comments": [], **i} for i in issues}
         self.labels, self.milestones = set(labels), set(milestones)
         self.calls, self.fail_on = [], fail_on
+        self.prs = {}
 
     def __call__(self, args, input=None, **_):
         assert args[0] == "gh"
@@ -32,7 +33,23 @@ class FakeGitHub:
                               "milestone": opt(a, "--milestone"), "comments": []}
             return 0, f"https://github.com/o/r/issues/{n}\n", ""
         elif a[:2] == ["issue", "view"]:
-            return 0, json.dumps({"body": self.issues[int(a[2])]["body"]}), ""
+            i = self.issues[int(a[2])]
+            return 0, json.dumps({"number": i["number"], "title": i["title"], "body": i["body"]}), ""
+        elif a[:2] == ["pr", "create"]:
+            n = 100 + len(self.prs)
+            self.prs[n] = {"number": n, "head": opt(a, "--head"), "base": opt(a, "--base"),
+                           "title": opt(a, "--title"), "body": input, "comments": [], "state": "OPEN"}
+            return 0, f"https://github.com/o/r/pull/{n}\n", ""
+        elif a[:2] == ["pr", "view"]:
+            pr = self.prs[int(a[2])]
+            return 0, json.dumps({"number": pr["number"], "title": pr["title"], "body": pr["body"],
+                                  "url": f"https://github.com/o/r/pull/{pr['number']}",
+                                  "headRefName": pr["head"], "baseRefName": pr["base"],
+                                  "state": pr["state"]}), ""
+        elif a[:2] == ["pr", "comment"]:
+            self.prs[int(a[2])]["comments"].append(input)
+        elif a[:2] == ["pr", "merge"]:
+            self.prs[int(a[2])]["state"] = "MERGED"
         elif a[:2] == ["issue", "edit"]:
             issue = self.issues[int(a[2])]
             if "--body-file" in a:

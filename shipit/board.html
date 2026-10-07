@@ -60,6 +60,12 @@ body {
   background: var(--card-hi); border: 1px solid rgba(255,180,84,.4); color: var(--text); border-radius: 12px;
   padding: 11px 16px; box-shadow: var(--shadow); font-weight: 500; transition: transform .5s var(--ease); z-index: 5; }
 .toast.show { transform: translate(-50%, 0); }
+.agent-card .key { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 12px; color: var(--faint); }
+.agent-card .line { margin-top: 8px; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 11.5px;
+  color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agent-card a.pr { display: inline-block; margin-top: 8px; color: var(--done); font-weight: 600; font-size: 12.5px; text-decoration: none; }
+.chip.st { color: var(--sc, var(--muted)); background: color-mix(in srgb, var(--sc, var(--muted)) 15%, transparent); }
+.chip.st.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: beat .9s infinite; }
 @keyframes beat { 0%,100% { box-shadow: 0 0 0 0 currentColor; } 50% { box-shadow: 0 0 0 5px transparent; } }
 
 /* What was said */
@@ -163,10 +169,10 @@ body {
 </section>
 
 <main class="board">
-  <section class="col" style="--c: var(--done)"><header><span class="cdot"></span>Done<span class="count" data-count="done">0</span></header><div class="cards" data-col="done" data-empty="Nothing shipped yet"></div></section>
-  <section class="col" style="--c: var(--blocked)"><header><span class="cdot"></span>Blocked<span class="count" data-count="blocked">0</span></header><div class="cards" data-col="blocked" data-empty="Nothing blocked"></div></section>
-  <section class="col" style="--c: var(--next)"><header><span class="cdot"></span>Next<span class="count" data-count="next">0</span></header><div class="cards" data-col="next" data-empty="Nothing planned yet"></div></section>
-  <section class="col" style="--c: var(--agent)"><header><span class="cdot"></span>Agent<span class="count" data-count="agent">0</span></header><div class="cards" data-col="agent" data-empty="Run with --agent N to hand next issues to Claude Code"></div></section>
+  <section class="col" style="--c: var(--done)"><header><span class="cdot"></span><span class="cname" data-name="done">Done</span><span class="count" data-count="done">0</span></header><div class="cards" data-col="done" data-empty="Nothing shipped yet"></div></section>
+  <section class="col" style="--c: var(--blocked)"><header><span class="cdot"></span><span class="cname" data-name="blocked">Blocked</span><span class="count" data-count="blocked">0</span></header><div class="cards" data-col="blocked" data-empty="Nothing blocked"></div></section>
+  <section class="col" style="--c: var(--next)"><header><span class="cdot"></span><span class="cname" data-name="next">Next</span><span class="count" data-count="next">0</span></header><div class="cards" data-col="next" data-empty="Nothing planned yet"></div></section>
+  <section class="col" style="--c: var(--agent)"><header><span class="cdot"></span><span class="cname" data-name="agent">Agent</span><span class="count" data-count="agent">0</span></header><div class="cards" data-col="agent" data-empty="Run with --agent N to hand next issues to Claude Code"></div></section>
 </main>
 
 <div class="toast" id="toast" role="status"></div>
@@ -187,6 +193,14 @@ const $ = (s, el = document) => el.querySelector(s);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const LABEL = { bug: "--bug", feature: "--feature", infra: "--infra", core: "--core", chore: "--chore" };
 const COL = { done: "--done", blocked: "--blocked", next: "--next", agent: "--agent" };
+const STATUS = { "branch created": "--next", "branch ready": "--next", working: "--agent", testing: "--infra",
+  pushing: "--next", "PR open": "--done", pushed: "--done", confirmed: "--done", "ruled out": "--blocked",
+  failed: "--blocked", unclear: "--muted" };
+const NAMES = {
+  standup: { done: "Done", blocked: "Blocked", next: "Next", agent: "Agent" },
+  debug: { done: "Confirmed", blocked: "Ruled out", next: "Hypotheses", agent: "Agents" },
+  review: { done: "Addressed", blocked: "Blocked", next: "Review points", agent: "Agent" },
+};
 const ICON = {
   cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
   dep: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v9a4 4 0 0 0 4 4h9"/><path d="M16 13l4 4-4 4"/></svg>',
@@ -206,7 +220,7 @@ function enqueue(fn) { queue.push(fn); if (!busy) drain(); }
 
 const es = new EventSource("/events");
 for (const kind of ["reset", "meta", "status", "transcript", "item", "receipt", "change", "scratch",
-                    "issue", "toast"]) {
+                    "issue", "toast", "agent"]) {
   es.addEventListener(kind, e => enqueue(() => on[kind](JSON.parse(e.data))));
 }
 let lastState = "offline";
@@ -224,6 +238,8 @@ const on = {
   meta(m) {
     $("#repo").textContent = m.repo;
     $("#replay").hidden = !m.replay;
+    const names = NAMES[m.mode] || NAMES.standup;
+    document.querySelectorAll(".cname").forEach(el => el.textContent = names[el.dataset.name]);
     replaying = m.replay;
     team = Object.fromEntries(m.team.map(p => [p.login, p]));
     team.__me = m.me;
@@ -255,6 +271,37 @@ const on = {
     $("#total").textContent = replaying
       ? `${(totalSaved / 60).toFixed(1)} min saved this session`
       : `${(r.total_saved_s / 60).toFixed(1)} min saved over ${r.runs} run${r.runs === 1 ? "" : "s"}`;
+  },
+  agent(a) {
+    let card = document.querySelector(`.agent-card[data-key="${CSS.escape(a.key)}"]`);
+    if (!card) {
+      card = document.createElement("article");
+      card.className = "card entering agent-card";
+      card.dataset.key = a.key;
+      card.style.setProperty("--c", "var(--agent)");
+      card.addEventListener("animationend", e => e.animationName === "enter" && card.classList.remove("entering"));
+      card.innerHTML = `<div class="card-top"><h3 class="title"></h3><span class="key"></span></div>
+        <div class="chips"><span class="chip st"></span></div><div class="line"></div>`;
+      $(".title", card).textContent = a.title;
+      $(".key", card).textContent = a.key;
+      $('[data-col="agent"]').append(card);
+      counts();
+    }
+    const st = $(".chip.st", card);
+    const color = STATUS[a.status] || "--muted";
+    if (st.textContent !== a.status) {
+      st.textContent = a.status;
+      st.style.setProperty("--sc", `var(${color})`);
+      st.classList.toggle("live", ["working", "testing", "pushing", "branch created"].includes(a.status));
+      st.classList.remove("pulse"); void st.offsetWidth; st.classList.add("pulse");
+    }
+    if (a.detail) $(".line", card).textContent = a.detail;
+    if (a.url && !$("a.pr", card)) {
+      const link = document.createElement("a");
+      link.className = "pr"; link.href = a.url; link.target = "_blank";
+      link.textContent = "Pull request ↗";
+      card.append(link);
+    }
   },
   async change(c) { if (items.has(c.id)) await change(c.id, c); },
   async scratch(s) { if (items.has(s.id)) await scratch(s.id); },
@@ -362,7 +409,7 @@ function deps() {
 
 function counts() {
   for (const col of Object.keys(COL)) {
-    const n = document.querySelectorAll(`[data-col="${col}"] .card:not(.scratched)`).length;
+    const n = document.querySelectorAll(`[data-col="${col}"] .card:not(.scratched):not(.gone)`).length;
     $(`[data-count="${col}"]`).textContent = n;
   }
 }

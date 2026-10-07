@@ -41,7 +41,14 @@ Shipit is a command-line tool for developers. Instead of typing a standup, you t
 9. A receipt (terminal and board): words, seconds, opened, closed, assigned, time saved vs
    typing at 40 wpm, and the running total. Then a workload check: if someone carries clearly
    more, it says so and you can move one by voice ("docs wala Milap ko de do").
-10. *(coming)* `--agent N` hands the next issues to Claude Code. See [plan.md](plan.md).
+10. `--agent N`: Claude Code (`claude -p`) works your top N next issues in parallel, each in its
+    own git worktree on `shipit/issue-<n>`. Its steps stream to the terminal (`[#7] …`) and the
+    board's Agent column. Shipit runs the tests itself, then pushes and opens a PR that closes
+    the issue and quotes what you said. A failed agent keeps its branch for you to look at.
+11. `--debug`: ramble about a bug. Each hypothesis becomes a card and gets its own agent, which
+    reports confirmed or ruled out with evidence. Say "fix it" to get a PR for the confirmed one.
+12. `--review PR`: speak a review. It's written up and posted on the PR, an agent addresses it
+    on the PR branch and pushes, and saying "merge" merges it.
 
 ## Setup
 
@@ -52,6 +59,9 @@ python -m shipit                     # dictate with Wispr Flow, empty line to fi
 python -m shipit --text "I fixed login. Milap takes the balance bug by Friday."
 python -m shipit --from-notes meeting.txt   # one meeting, issues for everyone mentioned
 python -m shipit --replay            # demo: three recorded standups on the board, no keys
+python -m shipit --agent 1           # ...then Claude Code takes your top next issue to a PR
+python -m shipit --debug             # ramble about a bug; agents check each hypothesis
+python -m shipit --review 12         # speak a review of PR #12
 python -m shipit --dry-run           # print the gh commands instead of running them
 python -m shipit --no-board          # terminal only
 ```

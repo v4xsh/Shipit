@@ -101,3 +101,24 @@ class Gh:
 
     def url(self, number):
         return f"https://github.com/{self.slug}/issues/{number}"
+
+    # Pull requests
+    def issue(self, number):
+        return self.json(["issue", "view", str(number), "-R", self.slug, "--json", "number,title,body"])
+
+    def pr(self, number):
+        return self.json(["pr", "view", str(number), "-R", self.slug, "--json",
+                          "number,title,body,url,headRefName,baseRefName,state"])
+
+    def create_pr(self, head, base, title, body):
+        out = self.call(["pr", "create", "-R", self.slug, "--head", head, "--base", base,
+                         "--title", title, "--body-file", "-"], input=body, write=True)
+        return out.strip().splitlines()[-1] if out.strip() else f"(dry run) PR {head} → {base}"
+
+    def pr_comment(self, number, body):
+        self.call(["pr", "comment", str(number), "-R", self.slug, "--body-file", "-"],
+                  input=body, write=True)
+
+    def pr_merge(self, number):
+        self.call(["pr", "merge", str(number), "-R", self.slug, "--squash", "--delete-branch"],
+                  write=True)
