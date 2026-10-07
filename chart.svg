@@ -2,6 +2,9 @@
 <rect width="240" height="200" fill="#fff"/>
 <text x="30" y="16">Minutes per prompt: spoken (blue) vs typed (grey)</text>
 <line x1="30" y1="170" x2="230" y2="170" stroke="#999"/>
-<rect x="58" y="30.0" width="16" height="140.0" fill="#9ca3af"/>
+<rect x="40" y="161.7" width="16" height="8.3" fill="#3b82f6"/>
+<rect x="58" y="141.8" width="16" height="28.2" fill="#9ca3af"/>
 <text x="54" y="184">0</text>
+<rect x="108" y="30.0" width="16" height="140.0" fill="#9ca3af"/>
+<text x="104" y="184">1</text>
 </svg>
