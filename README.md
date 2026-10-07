@@ -1,7 +1,12 @@
 <!-- chart -->
-![chart](chart.svg)
+![Spoken vs typed minutes per prompt](chart.svg)
 
-Time saved so far: 18.7 min
+| Prompt | Words | Spoken (min) | Typed (min) | Saved (min) |
+|---:|---:|---:|---:|---:|
+| 0 | 165 | 1.2 | 4.1 | 2.9 |
+| 1 | 820 | 4.8 | 20.5 | 15.8 |
+| 2 | 406 | ? | 10.2 | ? |
+| **Total** | **985** | **6.0** | **24.6** | **18.7** |
 <!-- /chart -->
 
 # Shipit
