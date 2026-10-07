@@ -1,10 +1,12 @@
+import io
 import json
 import os
 import tempfile
 import unittest
 from unittest import mock
 
-from shipit import env, gh, repo, state, team
+import shipit
+from shipit import cli, env, gh, repo, state, team
 
 
 class RepoTest(unittest.TestCase):
@@ -13,6 +15,15 @@ class RepoTest(unittest.TestCase):
                     "https://github.com/v4xsh/Shipit", "ssh://git@github.com/v4xsh/Shipit.git\n"):
             self.assertEqual(repo.parse_remote(url), "v4xsh/Shipit")
         self.assertIsNone(repo.parse_remote("https://gitlab.com/a/b.git"))
+
+
+class VersionTest(unittest.TestCase):
+    def test_prints_and_exits(self):
+        with mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            with self.assertRaises(SystemExit) as e:
+                cli.args(["--version"])
+        self.assertEqual(e.exception.code, 0)
+        self.assertEqual(out.getvalue().strip(), f"shipit {shipit.__version__}")
 
 
 class EnvTest(unittest.TestCase):

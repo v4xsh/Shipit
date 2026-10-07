@@ -4,7 +4,7 @@ import datetime
 import sys
 from pathlib import Path
 
-from . import agent, cards, debug, env, flow, gitlog, live, parser, proc, replay, repo, review, ship, state, team
+from . import __version__, agent, cards, debug, env, flow, gitlog, live, parser, proc, replay, repo, review, ship, state, team
 from .console import Oops, say, setup, warn
 from .github import Gh, GhError
 
@@ -21,6 +21,7 @@ def args(argv):
     p.add_argument("--review", type=int, metavar="PR", help="speak a review of a pull request")
     p.add_argument("--no-board", action="store_true", help="don't open the live board")
     p.add_argument("--port", type=int, default=7878, help="board port (default 7878)")
+    p.add_argument("--version", action="version", version=f"shipit {__version__}")
     return p.parse_args(argv)
 
 
