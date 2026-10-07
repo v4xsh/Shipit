@@ -1,7 +1,7 @@
 <!-- chart -->
 ![chart](chart.svg)
 
-Time saved so far: 2.9 min
+Time saved so far: 18.7 min
 <!-- /chart -->
 
 # Shipit

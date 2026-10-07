@@ -5,6 +5,9 @@
 <rect x="40" y="161.7" width="16" height="8.3" fill="#3b82f6"/>
 <rect x="58" y="141.8" width="16" height="28.2" fill="#9ca3af"/>
 <text x="54" y="184">0</text>
+<rect x="90" y="137.6" width="16" height="32.4" fill="#3b82f6"/>
 <rect x="108" y="30.0" width="16" height="140.0" fill="#9ca3af"/>
 <text x="104" y="184">1</text>
+<rect x="158" y="100.7" width="16" height="69.3" fill="#9ca3af"/>
+<text x="154" y="184">2</text>
 </svg>

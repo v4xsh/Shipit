@@ -24,9 +24,9 @@ Go ahead and commit this, and that's prompt 0. Go ahead.
 ## Prompt 1
 - Time: 2026-10-07 12:28
 - Words: 820
-- Spoken: ? s
+- Spoken: 285 s
 - Typing: 1230 s
-- Saved: ? s
+- Saved: 945 s
 
 ```text
 prompt 0 took 73 seconds. Fill that in.
@@ -78,4 +78,40 @@ How it works:
 43. 7. agent.
 44. 8. debug review and docsites.
 Build steps 1, 2, and 3 now, fully with test. Run the parser for green real agent. Grok with these three messy English standups and show me after this one. Commit after each step, and that's prompt 1. Go ahead and build it.
+```
+
+## Prompt 2
+- Time: 2026-10-07 15:48
+- Words: 406
+- Spoken: ? s
+- Typing: 609 s
+- Saved: ? s
+
+```text
+Prompt 1 took 285 seconds. Fill it in.
+- Grok key is in .env now.
+- A few misers: labels are bug, feature, infra, and core, not docs.
+- The CHO R1.
+- The tagline is: say it's tracked. It started in the fixture.
+- Tender is render, and input comes from Wispr Flow, dictating into the terminal, not Win+H. Say that everywhere.
+- The rhythmic chart looks terrible. Redo it properly: wide SVG, 900 by 300, that works on GitHub dark and light themes. A dark card background with light text, two bars per prompt, spoken and typed, with the numbers printed above each bar in minutes. Prompt numbers under them, a legend, a headline at the top with the totals, like 12 minutes spoken, 41 minutes typed, 29 minutes saved, 3.4 times faster, and the time saved number in bright accent color. Rounded bars, subtle grid lines, clean sans-serif font.
+- It must regenerate from the voice-log.md on every commit like before.
+- Add a small table under it in the README: one row per prompt with words, tokens typed and saved.
+- Run test/record.py against real Grok.
+- Show me all three boards.
+- Fix the prompt until the real replies are right.
+- Run the test.
+- The live board needs to look like a real product, not a demo page: one HTML file served on localhost, no frameworks, open in the browser.
+- When shipit starts, dark theme, good typography, generous spacing, subtle shadows, smooth animations.
+- Header with the repo name, team of stars, and a live status pill: listening, parsing, ready.
+- Four columns: done, blocked, next, and agent.
+- Server sends event push items as the party returns, and the card slides in one by one with a slight delay.
+- Each card shows the title, a colorful label chip, the Chinese GitHub avatar, the deadline dependencies arrows or chip, and the spoken line in quotes in a muted italic under it.
+- A scratched card strikes, throws, and fades.
+- A reassigned card swipes to the after with the flip.
+- A changed deadline pulses.
+- Footer bar for the speed ship that counts up when the run ends.
+- Add a --replay flag that plays the three fixtures through the board for demos without running it for real.
+- Screenshot: nothing, just make sure it works.
+That was prompt 2, so go ahead and build it.
 ```
