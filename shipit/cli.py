@@ -4,7 +4,7 @@ import datetime
 import sys
 from pathlib import Path
 
-from . import cards, env, flow, gitlog, live, parser, proc, replay, repo, state, team
+from . import cards, env, flow, gitlog, live, parser, proc, replay, repo, ship, state, team
 from .console import Oops, say, setup, warn
 from .github import Gh
 
@@ -45,7 +45,7 @@ def open_board(opts):
     return board
 
 
-def hear(opts, root, slug, crew, before, board):
+def hear(opts, root, crew, before, board, open_titles=()):
     """Steps 1-4: commits and speech become items on the board."""
     email = proc.run(["git", "config", "user.email"], cwd=root)[1].strip() or None
     drafts = gitlog.drafts(root, crew["me"], before["last_commit"], email)
@@ -57,7 +57,7 @@ def hear(opts, root, slug, crew, before, board):
         raise Oops("Nothing said and no new commits. Nothing to ship.")
     board.transcript(transcript)
     board.status("parsing")
-    result = parser.parse(transcript, crew, drafts) if transcript else {
+    result = parser.parse(transcript, crew, drafts, open_titles=open_titles) if transcript else {
         "items": drafts, "source": "git", "notes": []}
     for note in result["notes"]:
         warn(note)
@@ -75,9 +75,11 @@ def run(opts, board):
     say(f"Shipit · {slug} · {len(crew['members'])} on the team")
     board.run(slug, crew)
     before = state.load(root)
-    transcript, found = hear(opts, root, slug, crew, before, board)
     gh = Gh(slug, dry_run=opts.dry_run)
-    found, plan = flow.agree(found, gh, crew, board)
+    open_issues = flow.read_open(gh)
+    titles = [i["title"] for i in open_issues if i["title"] != ship.LOG_TITLE]
+    transcript, found = hear(opts, root, crew, before, board, titles)
+    found, plan = flow.agree(found, gh, crew, board, open_issues=open_issues)
     if found is None:
         say("Nothing touched GitHub.")
         return None

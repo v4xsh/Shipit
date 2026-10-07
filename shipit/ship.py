@@ -1,6 +1,7 @@
 """Confirmed items -> GitHub: issues, labels, milestones, closes, cross-links, a log comment."""
 import datetime
 import difflib
+import re
 
 from . import items as it
 
@@ -14,13 +15,25 @@ LABELS = {  # GitHub label colours, picked to match the board
 }
 
 
+VERBS = re.compile(r"^(work on|implement|build|write|check|review|set up|fix|add|create|update|"
+                   r"finish|do|handle|get|look into|make) ")
+SAME = {"setup": "set up", "documentation": "docs", "doc": "docs", "readme": "readme"}
+
+
+def key(title):
+    """The work, not the wording: "Implement confirm card" and "Work on confirm card" agree."""
+    words = " ".join(SAME.get(w, w) for w in it.norm_title(title).split()
+                     if w not in ("the", "a", "an"))
+    return VERBS.sub("", words + " ").strip() or words
+
+
 def find(title, issues, cutoff=0.88):
-    """An open issue whose normalized title matches, exactly or very nearly."""
-    table = {it.norm_title(i["title"]): i for i in issues if i["title"] != LOG_TITLE}
-    norm = it.norm_title(title)
-    if norm in table:
-        return table[norm]
-    close = difflib.get_close_matches(norm, table, n=1, cutoff=cutoff)
+    """An open issue for the same work: same key, or a very close one."""
+    table = {key(i["title"]): i for i in issues if i["title"] != LOG_TITLE}
+    k = key(title)
+    if k in table:
+        return table[k]
+    close = difflib.get_close_matches(k, table, n=1, cutoff=cutoff)
     return table[close[0]] if close else None
 
 
@@ -34,9 +47,9 @@ def plan(items, open_issues):
             p["close"].append((i, match["number"])) if match else p["log"].append(i)
         elif match:
             p["duplicate"].append((i, match["number"]))
-        elif it.norm_title(i["title"]) not in seen:
+        elif key(i["title"]) not in seen:
             p["create"].append(i)
-        seen.add(it.norm_title(i["title"]))
+        seen.add(key(i["title"]))
     return p
 
 

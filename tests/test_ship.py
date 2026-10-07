@@ -57,6 +57,18 @@ class PlanTest(unittest.TestCase):
         self.assertEqual(confirm.ask(lambda _: "nahi"), "no")
 
 
+class MatchTest(unittest.TestCase):
+    def test_reworded_titles_match(self):
+        issues = [{"number": n, "title": t} for n, t in
+                  [(1, "Work on confirm card"), (2, "Write README docs"), (3, "Review Render deploy"),
+                   (4, "Set up GitHub Pages")]]
+        for said, n in [("Implement confirm card", 1), ("Write README documentation", 2),
+                        ("Check Render deploy", 3), ("Setup GitHub Pages", 4)]:
+            self.assertEqual(ship.find(said, issues)["number"], n, said)
+        for said in ("Fix confirm card crash", "Write API docs", "Render deploy rollback"):
+            self.assertIsNone(ship.find(said, issues), said)
+
+
 class ExecuteTest(unittest.TestCase):
     def test_issues_labels_milestones(self):
         fake, _, _, done = shipped()

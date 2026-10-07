@@ -9,9 +9,9 @@ class BadOutput(ValueError):
     pass
 
 
-def parse(transcript, team, drafts=(), today=None, chat=groq.chat):
+def parse(transcript, team, drafts=(), today=None, chat=groq.chat, open_titles=()):
     """Return {"items": [...], "source": "groq"|"fallback", "notes": [...]}."""
-    msgs = prompt.messages(transcript, team, drafts, today)
+    msgs = prompt.messages(transcript, team, drafts, today, open_titles)
     error = None
     for _ in range(2):
         notes = []

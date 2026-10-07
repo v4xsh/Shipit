@@ -40,7 +40,9 @@ Rules:
   title, assignee, deadline, section or label; from/to are old/new values, a name the
   speaker abandoned is the "from"; said is the correction words, verbatim).
 - Ignore filler (uh, okay so, basically, matlab). Don't invent work that wasn't said.
-- Items already drafted from git commits are listed; don't repeat them."""
+- Items already drafted from git commits are listed; don't repeat them.
+- "open_issues" are already on GitHub. When an item is the same work as one of them, use
+  that issue's title exactly, word for word."""
 
 
 def dates(today):
@@ -62,8 +64,9 @@ def context(team, today=None):
                      for m in team["members"]]}
 
 
-def messages(transcript, team, drafts, today=None):
-    ctx = {**context(team, today), "already_done_from_git": [d["title"] for d in drafts]}
+def messages(transcript, team, drafts, today=None, open_titles=()):
+    ctx = {**context(team, today), "already_done_from_git": [d["title"] for d in drafts],
+           "open_issues": list(open_titles)}
     user = f"Context:\n{json.dumps(ctx, ensure_ascii=False)}\n\nTranscript:\n{transcript}"
     return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
 

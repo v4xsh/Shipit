@@ -14,9 +14,9 @@ def read_open(gh):
         return []
 
 
-def agree(found, gh, crew, board, read=input, today=None):
+def agree(found, gh, crew, board, read=input, today=None, open_issues=None):
     """Loop on the confirm card until yes or no. Returns (items, plan) or (None, None)."""
-    open_issues = read_open(gh)
+    open_issues = read_open(gh) if open_issues is None else open_issues
     while True:
         p = ship.plan(found, open_issues)
         say("\n" + confirm.card(p, gh.dry))
