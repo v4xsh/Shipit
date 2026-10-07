@@ -44,8 +44,9 @@ Scratched items and `changes` stay in the result so the board can animate them.
 - Footer receipt counts up items, words and minutes saved.
 - `--replay` plays the three recorded standups through the board for demos.
 
-## 5. Confirm card and GitHub actions
-- Terminal confirm card; nothing touches GitHub before "yes". All calls go via `gh`.
+## 5. Confirm card and GitHub actions ✅
+- Terminal confirm card: yes / edit (spoken fix, re-parsed, animated on the board) / no.
+  Nothing touches GitHub before "yes". All calls go via `gh`; `--dry-run` prints them.
 - One issue per blocked/next item; labels created if missing with sensible colours;
   assignee set; deadline → milestone with due date (created if missing);
   dependencies written as `Blocked by #n` / `Blocks #n` in the body.
@@ -56,7 +57,7 @@ Scratched items and `changes` stay in the result so the board can animate them.
 - If `gh` fails: print the issues as Markdown and copy them to the clipboard (`clip`).
 - State saved only after a successful run.
 
-## 6. Receipt and workload
+## 6. Receipt and workload ✅
 - Receipt in the terminal and on the board: issues opened, closed, assigned, words spoken,
   time saved vs typing at 40 wpm, plus the running total across runs.
 - Workload check: if someone has clearly more open issues than the rest, say so and let me

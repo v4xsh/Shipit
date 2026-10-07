@@ -41,13 +41,28 @@ Rules:
 - Items already drafted from git commits are listed; don't repeat them."""
 
 
-def messages(transcript, team, drafts, today=None):
+def context(team, today=None):
     today = today or datetime.date.today()
-    people = [{"login": m["login"], "name": m.get("name"), "aliases": m.get("aliases", [])}
-              for m in team["members"]]
-    context = {"today": f"{today.isoformat()} ({today.strftime('%A')})",
-               "speaker": team["me"], "team": people,
-               "already_done_from_git": [d["title"] for d in drafts]}
-    user = (f"Context:\n{json.dumps(context, ensure_ascii=False)}\n\n"
-            f"Transcript:\n{transcript}")
+    return {"today": f"{today.isoformat()} ({today.strftime('%A')})", "speaker": team["me"],
+            "team": [{"login": m["login"], "name": m.get("name"), "aliases": m.get("aliases", [])}
+                     for m in team["members"]]}
+
+
+def messages(transcript, team, drafts, today=None):
+    ctx = {**context(team, today), "already_done_from_git": [d["title"] for d in drafts]}
+    user = f"Context:\n{json.dumps(ctx, ensure_ascii=False)}\n\nTranscript:\n{transcript}"
     return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
+
+
+AMEND = SYSTEM + """
+
+You are amending an existing list: you get the current items as JSON and one new spoken
+edit. Return the full updated list with the same ids. Change only what the edit asks. For
+every field you change, append to that item's "changes" (said = the edit words, verbatim).
+New work gets a new id. Work the edit removes stays in the list with "scratched": true."""
+
+
+def amend_messages(current, edit, team, today=None):
+    ctx = {**context(team, today), "items": current}
+    user = f"Context:\n{json.dumps(ctx, ensure_ascii=False)}\n\nEdit:\n{edit}"
+    return [{"role": "system", "content": AMEND}, {"role": "user", "content": user}]

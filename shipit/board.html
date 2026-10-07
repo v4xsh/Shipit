@@ -48,7 +48,18 @@ body {
 .pill[data-state=parsing] .dot { background: var(--agent); animation: beat .6s infinite; }
 .pill[data-state=ready] { color: var(--done); border-color: rgba(63,185,80,.35); }
 .pill[data-state=ready] .dot { background: var(--done); }
-.pill[data-state=offline] { color: var(--muted); }
+.pill[data-state=offline], .pill[data-state=cancelled] { color: var(--muted); }
+.pill[data-state=confirm] { color: #ffb454; border-color: rgba(255,180,84,.35); }
+.pill[data-state=confirm] .dot { background: #ffb454; }
+.pill[data-state=shipping] { color: var(--agent); border-color: rgba(179,136,255,.35); }
+.pill[data-state=shipping] .dot { background: var(--agent); animation: beat .6s infinite; }
+.pill[data-state=shipped] { color: var(--done); border-color: rgba(63,185,80,.35); }
+.pill[data-state=shipped] .dot { background: var(--done); }
+.chip.issue { color: var(--done); background: rgba(63,185,80,.14); text-decoration: none; }
+.toast { position: fixed; top: 24px; left: 50%; transform: translate(-50%, -140%); max-width: min(640px, 90vw);
+  background: var(--card-hi); border: 1px solid rgba(255,180,84,.4); color: var(--text); border-radius: 12px;
+  padding: 11px 16px; box-shadow: var(--shadow); font-weight: 500; transition: transform .5s var(--ease); z-index: 5; }
+.toast.show { transform: translate(-50%, 0); }
 @keyframes beat { 0%,100% { box-shadow: 0 0 0 0 currentColor; } 50% { box-shadow: 0 0 0 5px transparent; } }
 
 /* What was said */
@@ -158,12 +169,14 @@ body {
   <section class="col" style="--c: var(--agent)"><header><span class="cdot"></span>Agent<span class="count" data-count="agent">0</span></header><div class="cards" data-col="agent" data-empty="Run with --agent N to hand next issues to Claude Code"></div></section>
 </main>
 
+<div class="toast" id="toast" role="status"></div>
 <footer class="receipt" id="receipt">
   <span class="head"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Receipt</span>
-  <span><b data-n="items">0</b>items</span>
-  <span><b data-n="assigned">0</b>assigned</span>
   <span><b data-n="words">0</b>words</span>
-  <span><b data-n="spoken" data-min>0</b>min spoken</span>
+  <span><b data-n="spoken">0</b>s spoken</span>
+  <span><b data-n="opened">0</b>opened</span>
+  <span><b data-n="closed">0</b>closed</span>
+  <span><b data-n="assigned">0</b>assigned</span>
   <span><b data-n="typed" data-min>0</b>min to type</span>
   <span class="saved"><b data-n="saved" data-min>0</b>min saved</span>
   <span class="spacer" id="total"></span>
@@ -192,7 +205,8 @@ async function drain() {
 function enqueue(fn) { queue.push(fn); if (!busy) drain(); }
 
 const es = new EventSource("/events");
-for (const kind of ["reset", "meta", "status", "transcript", "item", "receipt"]) {
+for (const kind of ["reset", "meta", "status", "transcript", "item", "receipt", "change", "scratch",
+                    "issue", "toast"]) {
   es.addEventListener(kind, e => enqueue(() => on[kind](JSON.parse(e.data))));
 }
 let lastState = "offline";
@@ -210,6 +224,7 @@ const on = {
   meta(m) {
     $("#repo").textContent = m.repo;
     $("#replay").hidden = !m.replay;
+    replaying = m.replay;
     team = Object.fromEntries(m.team.map(p => [p.login, p]));
     team.__me = m.me;
     $("#team").replaceChildren(...m.team.slice(0, 7).map(p => avatar(p.login)));
@@ -233,17 +248,41 @@ const on = {
   receipt(r) {
     $("#receipt").classList.add("show");
     totalSaved += r.saved_s;
-    const values = { items: r.items, assigned: r.assigned, words: r.words,
-      spoken: r.spoken_s / 60, typed: r.typed_s / 60, saved: r.saved_s / 60 };
+    const values = { words: r.words, spoken: r.spoken_s, opened: r.opened || 0, closed: r.closed || 0,
+      assigned: r.assigned, typed: r.typed_s / 60, saved: r.saved_s / 60 };
     // Not awaited: background tabs pause animation frames and must not stall the queue.
     Object.entries(values).forEach(([k, v]) => countUp($(`[data-n="${k}"]`), v));
-    $("#total").textContent = `${(totalSaved / 60).toFixed(1)} min saved this session`;
+    $("#total").textContent = replaying
+      ? `${(totalSaved / 60).toFixed(1)} min saved this session`
+      : `${(r.total_saved_s / 60).toFixed(1)} min saved over ${r.runs} run${r.runs === 1 ? "" : "s"}`;
+  },
+  async change(c) { if (items.has(c.id)) await change(c.id, c); },
+  async scratch(s) { if (items.has(s.id)) await scratch(s.id); },
+  issue(x) {
+    const entry = items.get(x.id);
+    if (!entry) return;
+    const chip = document.createElement(typeof x.number === "number" ? "a" : "span");
+    chip.className = "chip issue pulse";
+    chip.textContent = typeof x.number === "number" ? `#${x.number}` : "new";
+    if (chip.tagName === "A") { chip.href = x.url; chip.target = "_blank"; }
+    $(".chip.issue", entry.card)?.remove();
+    $(".chips", entry.card).prepend(chip);
+    return sleep(150);
+  },
+  toast(text) {
+    const t = $("#toast");
+    t.textContent = text;
+    t.classList.add("show");
+    clearTimeout(t.timer);
+    t.timer = setTimeout(() => t.classList.remove("show"), 8000);
   },
 };
+let replaying = false;
 
 function pill(state, remember = true) {
   if (remember) lastState = state;
-  const text = { listening: "Listening", parsing: "Parsing", ready: "Ready", offline: "Offline" };
+  const text = { listening: "Listening", parsing: "Parsing", ready: "Ready", confirm: "Confirm in terminal",
+    shipping: "Shipping", shipped: "Shipped", cancelled: "Not shipped", offline: "Offline" };
   $("#pill").dataset.state = state;
   $("#pillText").textContent = text[state] || state;
 }

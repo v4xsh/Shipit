@@ -28,6 +28,17 @@ class Board:
         for i in items:
             self.hub.publish("item", i)
 
+    def apply(self, events):
+        """Edits from items.diff: change, scratch and new item events."""
+        for kind, data in events:
+            self.hub.publish(kind, data)
+
+    def issue(self, id, number, url):
+        self.hub.publish("issue", {"id": id, "number": number, "url": url})
+
+    def toast(self, text):
+        self.hub.publish("toast", text)
+
     def receipt(self, stats):
         self.hub.publish("receipt", stats)
 

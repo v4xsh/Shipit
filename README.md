@@ -31,8 +31,16 @@ Shipit is a command-line tool for developers. Instead of typing a standup, you t
    Next and Agent columns; cards slide in as the parse returns, quoting what you said.
    Corrections play out on screen: scratched cards strike, shake and fade, reassigned avatars
    flip, changed deadlines pulse. A receipt counts up the minutes saved.
-7. *(coming)* A confirm card, then GitHub issues, labels, milestones, closes, workload check,
-   and `--agent N` to hand the next issues to Claude Code. See [plan.md](plan.md).
+7. A confirm card in the terminal: **yes**, **edit** (say the fix, the board animates it) or
+   **no**. Nothing touches GitHub before yes.
+8. On yes, via `gh`: one issue per blocked/next item with label, assignee and a `Due <date>`
+   milestone (all created if missing), `Blocked by #n` / `Blocks #n` cross-links, no duplicates
+   of open issues, done items close their issue, and a dated summary goes on the "Shipit log"
+   issue. Every issue body ends with `Said: "<your exact words>"`.
+9. A receipt (terminal and board): words, seconds, opened, closed, assigned, time saved vs
+   typing at 40 wpm, and the running total. Then a workload check: if someone carries clearly
+   more, it says so and you can move one by voice ("docs wala Milap ko de do").
+10. *(coming)* `--agent N` hands the next issues to Claude Code. See [plan.md](plan.md).
 
 ## Setup
 
@@ -43,6 +51,7 @@ python -m shipit                     # dictate with Wispr Flow, empty line to fi
 python -m shipit --text "I fixed login. Milap takes the balance bug by Friday."
 python -m shipit --from-notes meeting.txt   # one meeting, issues for everyone mentioned
 python -m shipit --replay            # demo: three recorded standups on the board, no keys
+python -m shipit --dry-run           # print the gh commands instead of running them
 python -m shipit --no-board          # terminal only
 ```
 

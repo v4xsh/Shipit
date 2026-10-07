@@ -87,3 +87,22 @@ def dedupe(found, drafts):
 def title(value):
     t = str(value).strip().rstrip(".")
     return t[:1].upper() + t[1:]
+
+
+def amend(current, edit, team, today=None, chat=groq.chat):
+    """Apply a spoken edit to the items. Returns (items, notes); unchanged on failure."""
+    drafts = [i for i in current if items.is_commit(i)]
+    spoken = [i for i in current if not items.is_commit(i)]
+    msgs = prompt.amend_messages(spoken, edit, team, today)
+    error = None
+    for _ in range(2):
+        notes = []
+        try:
+            return drafts + clean(json.loads(chat(msgs)), team, notes), notes
+        except groq.GroqError as e:
+            error = str(e)
+            if not e.bad_json:
+                break
+        except (ValueError, TypeError, AttributeError) as e:
+            error = f"Groq sent messy JSON ({e.__class__.__name__})"
+    return current, [f"{error}. Couldn't apply that edit; nothing changed."]

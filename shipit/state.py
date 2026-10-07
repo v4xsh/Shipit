@@ -19,3 +19,12 @@ def save(root, state):
     p = path(root)
     p.parent.mkdir(exist_ok=True)
     p.write_text(json.dumps(state, indent=2), encoding="utf-8")
+
+
+def record(root, state, head, stats, now):
+    """After a successful run: move the git cursor and add to the running totals."""
+    state = {**state, "last_commit": head or state["last_commit"], "last_run": now,
+             "runs": state["runs"] + 1, "words": state["words"] + stats["words"],
+             "seconds_saved": state["seconds_saved"] + stats["saved_s"]}
+    save(root, state)
+    return state
