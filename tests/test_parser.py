@@ -167,7 +167,8 @@ class GroqTest(unittest.TestCase):
 class PromptAndCardsTest(unittest.TestCase):
     def test_prompt_has_context(self):
         user = prompt.messages("hi", TEAM, [items.make("c1", "done", "Ship it", "x")], TODAY)[1]
-        for bit in ("2026-10-07 (Wednesday)", "milap-dev", "Milu", "Ship it", "hi"):
+        for bit in ("2026-10-07 (Wednesday)", "milap-dev", "Milu", "Ship it", "hi",
+                    '"Thursday": "2026-10-08"', '"Wednesday": "2026-10-14"', '"tomorrow (kal)": "2026-10-08"'):
             self.assertIn(bit, user["content"])
 
     def test_board_text(self):

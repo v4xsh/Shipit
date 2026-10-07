@@ -20,4 +20,5 @@ def stats(transcript, items, done=None, before=None):
 def text(r):
     return (f"Receipt · {r['words']} words · ~{r['spoken_s']}s spoken vs {r['typed_s']}s typing · "
             f"{r['opened']} opened · {r['closed']} closed · {r['assigned']} assigned · "
-            f"{r['saved_s']}s saved · {r['total_saved_s'] / 60:.1f} min saved over {r['runs']} runs")
+            f"{r['saved_s']}s saved · {r['total_saved_s'] / 60:.1f} min saved over {r['runs']} "
+            f"run{'' if r['runs'] == 1 else 's'}")

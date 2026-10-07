@@ -19,7 +19,7 @@ Rules:
   items or their depends_on.
 - "A can't start till B is done" / "A ke liye pehle B": A is blocked and A.depends_on
   has B's id. B keeps its own section (usually next). Never mark B blocked for this.
-- label: bug (something broken or flaky to fix), feature (new capability users see),
+- label: bug (something broken or flaky to fix, so "fixed X" is a bug), feature (new capability users see),
   infra (CI, deploy, build, tooling, config, hosting), chore (upkeep: docs, release notes,
   cleanup, dependency bumps, renames), core (everything else: refactors, internal work,
   third-party integrations).
@@ -27,7 +27,9 @@ Rules:
   main, maine, mujhe, mera, "assign it to me", or the speaker's own name). Work the
   speaker did or will do with nobody else named is "me". null only for work left open
   ("someone needs to...") that nobody takes. The team list helps you spell names.
-- deadline: resolve relative dates ("Friday", "kal", "next week") against today.
+- deadline: look relative dates ("Friday", "kal", "tomorrow", "next week") up in the
+  "dates" table in the context; never compute weekdays yourself. Hindi "kal" with a
+  future verb means tomorrow.
 - depends_on: ids of other items in this list that must finish first.
 - said: the exact words from the transcript this item came from, copied verbatim
   (the original mention; correction words go in changes, not here).
@@ -41,9 +43,21 @@ Rules:
 - Items already drafted from git commits are listed; don't repeat them."""
 
 
+def dates(today):
+    """Weekday names -> the next such date, so the model never does calendar math."""
+    day = lambda n: (today + datetime.timedelta(days=n)).isoformat()
+    table = {"today": day(0), "tomorrow (kal)": day(1), "day after tomorrow (parso)": day(2)}
+    for n in range(1, 8):
+        d = today + datetime.timedelta(days=n)
+        table[d.strftime("%A")] = d.isoformat()
+    table["next week"] = day(7)
+    return table
+
+
 def context(team, today=None):
     today = today or datetime.date.today()
-    return {"today": f"{today.isoformat()} ({today.strftime('%A')})", "speaker": team["me"],
+    return {"today": f"{today.isoformat()} ({today.strftime('%A')})", "dates": dates(today),
+            "speaker": team["me"],
             "team": [{"login": m["login"], "name": m.get("name"), "aliases": m.get("aliases", [])}
                      for m in team["members"]]}
 

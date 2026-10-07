@@ -88,7 +88,7 @@ def run(opts, board):
     if not gh.dry:  # state moves only after a real, successful run
         state.record(root, before, gitlog.head(root), stats, datetime.datetime.now().isoformat())
     ids = {n: i["id"] for i, n in done["opened"] + done["duplicates"]}
-    flow.balance(gh, crew, board, ids)
+    flow.balance(gh, crew, board, ids, opened=done["opened"])
     return done
 
 

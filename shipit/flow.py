@@ -62,9 +62,13 @@ def deliver(p, gh, board, today):
     return done
 
 
-def balance(gh, crew, board, ids=None, read=input, chat=None):
+def balance(gh, crew, board, ids=None, read=input, chat=None, opened=()):
     """Say who carries the most; let me move one issue by voice."""
     open_issues = read_open(gh)
+    if gh.dry:  # nothing was created, so count what would have been
+        open_issues += [{"number": n, "title": i["title"],
+                         "assignees": [{"login": i["assignee"]}] if i["assignee"] else []}
+                        for i, n in opened]
     counts = workload.counts(open_issues, crew)
     note = workload.message(counts)
     say("\n" + note)
