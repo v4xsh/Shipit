@@ -1,0 +1,3 @@
+#!/bin/sh
+# Regenerate the chart and keep README in sync on every commit.
+python chart.py && git add chart.svg README.md

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="200" font-family="sans-serif" font-size="11">
+<rect width="240" height="200" fill="#fff"/>
+<text x="30" y="16">Minutes per prompt: spoken (blue) vs typed (grey)</text>
+<line x1="30" y1="170" x2="230" y2="170" stroke="#999"/>
+<rect x="58" y="30.0" width="16" height="140.0" fill="#9ca3af"/>
+<text x="54" y="184">0</text>
+</svg>
