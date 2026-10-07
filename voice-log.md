@@ -83,9 +83,9 @@ Build steps 1, 2, and 3 now, fully with test. Run the parser for green real agen
 ## Prompt 2
 - Time: 2026-10-07 15:48
 - Words: 406
-- Spoken: ? s
+- Spoken: 154 s
 - Typing: 609 s
-- Saved: ? s
+- Saved: 455 s
 
 ```text
 Prompt 1 took 285 seconds. Fill it in.
@@ -114,4 +114,30 @@ Prompt 1 took 285 seconds. Fill it in.
 - Add a --replay flag that plays the three fixtures through the board for demos without running it for real.
 - Screenshot: nothing, just make sure it works.
 That was prompt 2, so go ahead and build it.
+```
+
+## Prompt 3
+- Time: 2026-10-07 16:16
+- Words: 266
+- Spoken: ? s
+- Typing: 399 s
+- Saved: ? s
+
+```text
+Prompt 2 took 154 seconds.
+The CHO R1 was CHORE, the fifth label. Tagline: it started with the apostrophe S. Milap is now a collaborator. Refresh the team.
+Now steps 5 and 6 together:
+1. After the board shows the parts, confirm card in the terminal: yes, edit or no. Nothing touches GitHub before yes.
+2. On yes, using GH, one issue per blogged item. Labels created if missing, and good colors. Assignee set. Deadlines become milestones with due date. Created if missing. Dependencies written as blog by #n and blocks #n in the body, and cross-linked after creation.
+3. Video by normalized title against open issue.
+4. Done items close the matching open issue with a comment.
+5. Updated summary comment on a tracking issue called shipit.
+6. Log created on first run, and every issue body ends with "said: the exact spoken word in quotes". Save state only after a successful run.
+7. The speed received in the terminal and on the board: words, seconds, issues, open, closed, assigned, type, timing, time saved at 40 words a minute, and run in total.
+8. The workload check: count open issues per person if someone has clearly more, say so.
+9. Move the docs 1 to Milap, and it reassigns.
+10. A --dry-run flag that prints the `gh` command instead of running them.
+11. Test with `gh` mocked, then run it for real on this repo with one messy Hinglish standup that assigns something to Milap, and show me the issue it made.
+12. Commit.
+That was our prompt number 3. Go ahead and build it.
 ```
