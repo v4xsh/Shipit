@@ -28,7 +28,7 @@ Shipit is a command-line tool for developers. Instead of typing a standup, you t
 ## Setup
 
 ```sh
-echo GROQ_API_KEY=your-key > .env    # gitignored
+cp .env.example .env                 # add GROQ_API_KEY; .env is gitignored
 gh auth login
 python -m shipit                     # dictate with Win+H, empty line to finish
 python -m shipit --text "I fixed login. Milap takes the balance bug by Friday."
@@ -42,4 +42,5 @@ minutes spoken vs. minutes it would take to type (40 wpm).
 ```sh
 git config core.hooksPath hooks   # pre-commit regenerates the chart
 python -m unittest                # tests use recorded model responses, no key needed
+python tests/record.py             # re-record them from real Groq (needs .env key)
 ```
