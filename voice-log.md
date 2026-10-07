@@ -119,9 +119,9 @@ That was prompt 2, so go ahead and build it.
 ## Prompt 3
 - Time: 2026-10-07 16:16
 - Words: 266
-- Spoken: ? s
+- Spoken: 103 s
 - Typing: 399 s
-- Saved: ? s
+- Saved: 296 s
 
 ```text
 Prompt 2 took 154 seconds.
@@ -140,4 +140,31 @@ Now steps 5 and 6 together:
 11. Test with `gh` mocked, then run it for real on this repo with one messy Hinglish standup that assigns something to Milap, and show me the issue it made.
 12. Commit.
 That was our prompt number 3. Go ahead and build it.
+```
+
+## Prompt 4
+- Time: 2026-10-07 23:13
+- Words: 288
+- Spoken: ? s
+- Typing: 432 s
+- Saved: ? s
+
+```text
+prompt 3 took 103 seconds.
+Now, step 7: the agent + debug and review.
+- After confirming, take the top N next issues assigned to me.
+- For each one, create a branch named `shipit/issue/-number`.
+- Run `claude-p` with the prompt that includes the issue title, body, the spoken line, and says to implement it.
+- Run the test and commit.
+- On Windows, call `claude.cmd` with `shell true`, `UTF-8`, and stream its output to the terminal with the issue number as a prefix and to the board's agent column as status: `branch created`, `working trees`, `PRs open`.
+- Run them in parallel with threads in separate Git worktrees so they don't fight.
+- When one finishes, push the branch and open a pull request with GH that references the issue, codes the spoken line, and summarizes the change.
+- If the agent fails, say so and leave the branch.
+- `--debug`: I ramble about a bug.
+- Grok extracts each hypothesis as a card on the board in the hypothesis column. One agent per hypothesis in its own worktree checks it and reports `confirmed` or `ruled out` with evidence, and I can say `fix it` to open a PR for the confirmed one.
+- `--review` with the PR number as `ica review`. Grok turns it into a clear review, comments on the PR, assigns the agent on that branch to address them, and pushes, saying `merge`. It merges the PR.
+- Test everything with Claude and GH mocked, then do one real run.
+- `shipit -agent 1` on this repo. Let the agent take a small real issue and show me that PR it's open.
+- Commit.
+That was our prompt 4. Go ahead and build it.
 ```

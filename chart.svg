@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
 <rect x="0.5" y="0.5" width="899" height="299" rx="12" fill="#0d1117" stroke="#30363d"/>
-<text x="28" y="44" font-size="20" font-weight="600" fill="#e6edf3">8.5 min spoken · 34.8 min typed · <tspan fill="#3fb950">26.2 min saved</tspan> · 4.1× faster</text>
+<text x="28" y="44" font-size="20" font-weight="600" fill="#e6edf3">10.2 min spoken · 41.4 min typed · <tspan fill="#3fb950">31.2 min saved</tspan> · 4.0× faster</text>
 <rect x="28" y="60" width="10" height="10" rx="2" fill="#58a6ff"/>
 <text x="44" y="69" font-size="12" fill="#8b949e">Spoken</text>
 <rect x="124" y="60" width="10" height="10" rx="2" fill="#6e7681"/>
@@ -13,24 +13,29 @@
 <text x="48" y="149.3" font-size="11" fill="#8b949e" text-anchor="end">20</text>
 <line x1="56" y1="92.0" x2="876" y2="92.0" stroke="#21262d"/>
 <text x="48" y="96.0" font-size="11" fill="#8b949e" text-anchor="end">30</text>
-<path d="M121.5,252.0 V250.5 Q121.5,245.5 126.5,245.5 H150.5 Q155.5,245.5 155.5,250.5 V252.0 Z" fill="#58a6ff"/>
-<text x="138.5" y="239.5" font-size="11" fill="#e6edf3" text-anchor="middle">1.2</text>
-<path d="M161.5,252.0 V235.0 Q161.5,230.0 166.5,230.0 H190.5 Q195.5,230.0 195.5,235.0 V252.0 Z" fill="#6e7681"/>
-<text x="178.5" y="224.0" font-size="11" fill="#e6edf3" text-anchor="middle">4.1</text>
-<text x="158.5" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#0</text>
-<path d="M326.5,252.0 V231.7 Q326.5,226.7 331.5,226.7 H355.5 Q360.5,226.7 360.5,231.7 V252.0 Z" fill="#58a6ff"/>
-<text x="343.5" y="220.7" font-size="11" fill="#e6edf3" text-anchor="middle">4.8</text>
-<path d="M366.5,252.0 V147.7 Q366.5,142.7 371.5,142.7 H395.5 Q400.5,142.7 400.5,147.7 V252.0 Z" fill="#6e7681"/>
-<text x="383.5" y="136.7" font-size="11" fill="#e6edf3" text-anchor="middle">20.5</text>
-<text x="363.5" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#1</text>
-<path d="M531.5,252.0 V243.3 Q531.5,238.3 536.5,238.3 H560.5 Q565.5,238.3 565.5,243.3 V252.0 Z" fill="#58a6ff"/>
-<text x="548.5" y="232.3" font-size="11" fill="#e6edf3" text-anchor="middle">2.6</text>
-<path d="M571.5,252.0 V202.9 Q571.5,197.9 576.5,197.9 H600.5 Q605.5,197.9 605.5,202.9 V252.0 Z" fill="#6e7681"/>
-<text x="588.5" y="191.9" font-size="11" fill="#e6edf3" text-anchor="middle">10.2</text>
-<text x="568.5" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#2</text>
-<text x="753.5" y="246.0" font-size="11" fill="#e6edf3" text-anchor="middle">?</text>
-<path d="M776.5,252.0 V221.5 Q776.5,216.5 781.5,216.5 H805.5 Q810.5,216.5 810.5,221.5 V252.0 Z" fill="#6e7681"/>
-<text x="793.5" y="210.5" font-size="11" fill="#e6edf3" text-anchor="middle">6.7</text>
-<text x="773.5" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#3</text>
+<path d="M101.0,252.0 V250.5 Q101.0,245.5 106.0,245.5 H130.0 Q135.0,245.5 135.0,250.5 V252.0 Z" fill="#58a6ff"/>
+<text x="118.0" y="239.5" font-size="11" fill="#e6edf3" text-anchor="middle">1.2</text>
+<path d="M141.0,252.0 V235.0 Q141.0,230.0 146.0,230.0 H170.0 Q175.0,230.0 175.0,235.0 V252.0 Z" fill="#6e7681"/>
+<text x="158.0" y="224.0" font-size="11" fill="#e6edf3" text-anchor="middle">4.1</text>
+<text x="138.0" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#0</text>
+<path d="M265.0,252.0 V231.7 Q265.0,226.7 270.0,226.7 H294.0 Q299.0,226.7 299.0,231.7 V252.0 Z" fill="#58a6ff"/>
+<text x="282.0" y="220.7" font-size="11" fill="#e6edf3" text-anchor="middle">4.8</text>
+<path d="M305.0,252.0 V147.7 Q305.0,142.7 310.0,142.7 H334.0 Q339.0,142.7 339.0,147.7 V252.0 Z" fill="#6e7681"/>
+<text x="322.0" y="136.7" font-size="11" fill="#e6edf3" text-anchor="middle">20.5</text>
+<text x="302.0" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#1</text>
+<path d="M429.0,252.0 V243.3 Q429.0,238.3 434.0,238.3 H458.0 Q463.0,238.3 463.0,243.3 V252.0 Z" fill="#58a6ff"/>
+<text x="446.0" y="232.3" font-size="11" fill="#e6edf3" text-anchor="middle">2.6</text>
+<path d="M469.0,252.0 V202.9 Q469.0,197.9 474.0,197.9 H498.0 Q503.0,197.9 503.0,202.9 V252.0 Z" fill="#6e7681"/>
+<text x="486.0" y="191.9" font-size="11" fill="#e6edf3" text-anchor="middle">10.2</text>
+<text x="466.0" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#2</text>
+<path d="M593.0,252.0 V247.8 Q593.0,242.8 598.0,242.8 H622.0 Q627.0,242.8 627.0,247.8 V252.0 Z" fill="#58a6ff"/>
+<text x="610.0" y="236.8" font-size="11" fill="#e6edf3" text-anchor="middle">1.7</text>
+<path d="M633.0,252.0 V221.5 Q633.0,216.5 638.0,216.5 H662.0 Q667.0,216.5 667.0,221.5 V252.0 Z" fill="#6e7681"/>
+<text x="650.0" y="210.5" font-size="11" fill="#e6edf3" text-anchor="middle">6.7</text>
+<text x="630.0" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#3</text>
+<text x="774.0" y="246.0" font-size="11" fill="#e6edf3" text-anchor="middle">?</text>
+<path d="M797.0,252.0 V218.6 Q797.0,213.6 802.0,213.6 H826.0 Q831.0,213.6 831.0,218.6 V252.0 Z" fill="#6e7681"/>
+<text x="814.0" y="207.6" font-size="11" fill="#e6edf3" text-anchor="middle">7.2</text>
+<text x="794.0" y="272" font-size="12" fill="#8b949e" text-anchor="middle">#4</text>
 <text x="876" y="286" font-size="11" fill="#8b949e" text-anchor="end">minutes per voice prompt</text>
 </svg>
