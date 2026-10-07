@@ -12,7 +12,7 @@
 
 # Shipit
 
-**Say it. It's tracked. It started.**
+**Say it. It's tracked. It's started.**
 
 Shipit is a command-line tool for developers. Instead of typing a standup, you talk, and it ships.
 
@@ -26,7 +26,7 @@ Shipit is a command-line tool for developers. Instead of typing a standup, you t
    "assign it to me", "scratch that", "actually make that Friday". Speak for the whole team,
    or pass a meeting transcript with `--from-notes notes.txt`.
 5. Groq (`openai/gpt-oss-120b`) turns it into **done / blocked / next** items, each with a
-   title, label (bug/feature/infra/core), assignee login, deadline, dependencies and the exact words said.
+   title, label (bug/feature/infra/core/chore), assignee login, deadline, dependencies and the exact words said.
 6. A live board opens in your browser (localhost, one HTML file, no framework): Done, Blocked,
    Next and Agent columns; cards slide in as the parse returns, quoting what you said.
    Corrections play out on screen: scratched cards strike, shake and fade, reassigned avatars

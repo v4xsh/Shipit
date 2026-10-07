@@ -32,7 +32,8 @@ class GitlogTest(unittest.TestCase):
         self.assertEqual(gitlog.guess_label("fix: x", ["a.py"]), "bug")
         self.assertEqual(gitlog.guess_label("Fixed login", ["a.py"]), "bug")
         self.assertEqual(gitlog.guess_label("feat: x", ["a.py"]), "feature")
-        self.assertEqual(gitlog.guess_label("tidy", ["README.md"]), "core")
+        self.assertEqual(gitlog.guess_label("tidy", ["README.md"]), "chore")
+        self.assertEqual(gitlog.guess_label("chore: bump", ["a.py"]), "chore")
         self.assertEqual(gitlog.guess_label("ci: x", []), "infra")
         self.assertEqual(gitlog.guess_label("bump", [".github/workflows/t.yml"]), "infra")
         self.assertEqual(gitlog.guess_label("bump", ["requirements.txt"]), "infra")
@@ -50,7 +51,7 @@ class GitlogTest(unittest.TestCase):
         commit(self.root, "c.py", "fix: balance rounding")
         d = gitlog.drafts(self.root, "v4xsh", since_commit=last, author="me@x.dev")
         self.assertEqual([i["title"] for i in d], ["Write guide", "Balance rounding"])
-        self.assertEqual([i["label"] for i in d], ["core", "bug"])
+        self.assertEqual([i["label"] for i in d], ["chore", "bug"])
         self.assertTrue(all(i["section"] == "done" and i["assignee"] == "v4xsh" for i in d))
         self.assertTrue(d[0]["said"].startswith("commit "))
 

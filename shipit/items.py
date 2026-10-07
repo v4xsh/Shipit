@@ -2,7 +2,7 @@
 import re
 
 SECTIONS = ("done", "blocked", "next")
-LABELS = ("bug", "feature", "infra", "core")
+LABELS = ("bug", "feature", "infra", "core", "chore")
 
 
 def make(id, section, title, said, label="core", assignee=None, deadline=None,

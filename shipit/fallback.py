@@ -8,6 +8,7 @@ DONE = re.compile(r"\b(done|finished|fixed|shipped|merged|completed|kar diya|ho 
 BLOCKED = re.compile(r"\b(blocked|blocks on|stuck|waiting on|waiting for|atka|atki)\b", re.I)
 SCRATCH = re.compile(r"\b(?:scratch that|cancel that|never mind|rehne do)\b", re.I)
 BUG = re.compile(r"\b(bug|fix|fixed|broken|crash|error|flaky)\b", re.I)
+CHORE = re.compile(r"\b(docs?|readme|release notes|cleanup|bump|rename|chore)\b", re.I)
 FEATURE = re.compile(r"\b(add|build|new|feature|support|implement|export)\b", re.I)
 INFRA = re.compile(r"\b(ci|deploy|docker|pipeline|build|config|infra)\b", re.I)
 ME = re.compile(r"\b(i|i'm|i'll|me|my|main|maine|mujhe|mera)\b", re.I)
@@ -20,7 +21,7 @@ def section(text):
 
 
 def label(text):
-    for name, pattern in (("infra", INFRA), ("bug", BUG), ("feature", FEATURE)):
+    for name, pattern in (("infra", INFRA), ("bug", BUG), ("chore", CHORE), ("feature", FEATURE)):
         if pattern.search(text):
             return name
     return "core"

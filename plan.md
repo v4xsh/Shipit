@@ -7,7 +7,7 @@ One module per concern in `shipit/`. Tests use recorded model responses (no key 
 ## Data model
 
 An **item** has: `id`, `section` (`done` | `blocked` | `next`), `title`,
-`label` (`bug` | `feature` | `infra` | `core`), `assignee` (collaborator login), `deadline`
+`label` (`bug` | `feature` | `infra` | `core` | `chore`), `assignee` (collaborator login), `deadline`
 (ISO date or null), `depends_on` (item ids), `said` (exact spoken words),
 `scratched` (bool) and `changes` (corrections applied: field, from, to, said).
 Scratched items and `changes` stay in the result so the board can animate them.
@@ -23,7 +23,7 @@ Scratched items and `changes` stay in the result so the board can animate them.
 ## 2. Git log → done list ✅
 - `git log <last-run-commit>..HEAD` by my email (first run: last 24 hours), no merges.
 - Each commit becomes a drafted `done` item: prefix like `feat:` stripped, label guessed
-  from the commit prefix and files touched (bug/feature/infra/core), `said` = `commit <sha>`.
+  from the commit prefix and files touched (bug/feature/infra/core/chore), `said` = `commit <sha>`.
 
 ## 3. Parser ✅
 - Input: Wispr Flow dictating into the terminal, `--text`, or `--from-notes FILE`.

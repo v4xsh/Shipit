@@ -8,7 +8,7 @@ from .console import Oops, say, setup, warn
 
 
 def args(argv):
-    p = argparse.ArgumentParser(prog="shipit", description="Say it. It's tracked. It started.")
+    p = argparse.ArgumentParser(prog="shipit", description="Say it. It's tracked. It's started.")
     p.add_argument("--text", help="the standup as text instead of dictating")
     p.add_argument("--from-notes", metavar="FILE", help="a meeting transcript file")
     p.add_argument("--replay", action="store_true", help="play the recorded demo standups")

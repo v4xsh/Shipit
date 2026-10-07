@@ -5,7 +5,7 @@ import json
 SYSTEM = """You turn a spoken standup (English, Hindi or Hinglish, messy, transcribed by
 speech-to-text) into work items. Reply with JSON only:
 {"items": [{"id": "i1", "section": "done|blocked|next", "title": "...",
-  "label": "bug|feature|infra|core", "assignee": "...", "deadline": "YYYY-MM-DD" or null,
+  "label": "bug|feature|infra|core|chore", "assignee": "...", "deadline": "YYYY-MM-DD" or null,
   "depends_on": ["i2"], "said": "...", "scratched": false,
   "changes": [{"field": "...", "from": "...", "to": "...", "said": "..."}]}]}
 
@@ -20,8 +20,9 @@ Rules:
 - "A can't start till B is done" / "A ke liye pehle B": A is blocked and A.depends_on
   has B's id. B keeps its own section (usually next). Never mark B blocked for this.
 - label: bug (something broken or flaky to fix), feature (new capability users see),
-  infra (CI, deploy, build, tooling, config, hosting), core (everything else: refactors,
-  docs, internal work, third-party integrations).
+  infra (CI, deploy, build, tooling, config, hosting), chore (upkeep: docs, release notes,
+  cleanup, dependency bumps, renames), core (everything else: refactors, internal work,
+  third-party integrations).
 - assignee: the person's name exactly as spoken, or "me" for the speaker (I, I'm, my,
   main, maine, mujhe, mera, "assign it to me", or the speaker's own name). Work the
   speaker did or will do with nobody else named is "me". null only for work left open

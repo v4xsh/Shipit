@@ -114,7 +114,7 @@ class FallbackTest(unittest.TestCase):
     def test_hinglish_keywords(self):
         got = fallback.split(DATA["standups"][1], TEAM)
         self.assertEqual(got[0]["section"], "done")
-        self.assertEqual(got[0]["label"], "core")
+        self.assertEqual(got[0]["label"], "chore")  # README
         self.assertEqual([i["title"] for i in got if i["scratched"]],
                          ["Uske baad Docker setup karunga"])  # "..., nahi scratch that"
         self.assertEqual(got[4]["assignee"], "milap-dev")
