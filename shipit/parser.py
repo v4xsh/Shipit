@@ -48,7 +48,7 @@ def clean(data, team, notes):
         if who and not login:
             notes.append(f"Couldn't match '{who}' to a collaborator; left unassigned.")
         out.append(items.make(
-            id, section, str(r["title"]).strip(), str(r.get("said") or r["title"]),
+            id, section, title(r["title"]), str(r.get("said") or r["title"]),
             label=r.get("label") if r.get("label") in items.LABELS else "core",
             assignee=login, deadline=iso_date(r.get("deadline")),
             depends_on=[str(d) for d in r.get("depends_on") or []],
@@ -82,3 +82,8 @@ def dedupe(found, drafts):
     """Drafted commits come first; spoken items repeating them are dropped."""
     done = {items.norm_title(d["title"]) for d in drafts}
     return list(drafts) + [i for i in found if items.norm_title(i["title"]) not in done]
+
+
+def title(value):
+    t = str(value).strip().rstrip(".")
+    return t[:1].upper() + t[1:]

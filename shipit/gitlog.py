@@ -4,7 +4,7 @@ import re
 from . import items, proc
 
 PREFIX = re.compile(r"^\w+(\([^)]*\))?!?:\s*")
-DOCS = re.compile(r"(^docs/|\.md$|\.rst$)", re.I)
+FIX = re.compile(r"fix(e[sd])?\b", re.I)
 INFRA = re.compile(r"(^\.github/|^hooks/|docker|\.ya?ml$|\.toml$|\.cfg$|\.ini$|^setup\.py$"
                    r"|requirements.*\.txt$|^\.gitignore$)", re.I)
 
@@ -34,11 +34,11 @@ def commits(root, since_commit=None, author=None):
 
 def guess_label(subject, files):
     kind = subject.split(":")[0].split("(")[0].lower() if PREFIX.match(subject) else ""
-    if kind == "docs" or (files and all(DOCS.search(f) for f in files)):
-        return "docs"
     if kind in ("ci", "build", "chore") or (files and all(INFRA.search(f) for f in files)):
         return "infra"
-    return "core"
+    if kind == "fix" or FIX.match(subject):
+        return "bug"
+    return "feature" if kind == "feat" else "core"
 
 
 def clean(subject):

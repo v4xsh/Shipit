@@ -1,1 +1,1 @@
-"""Shipit: say it, it's tagged, it started."""
+"""Shipit: say it. It's tracked. It started."""

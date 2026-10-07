@@ -7,7 +7,8 @@ DONE = re.compile(r"\b(done|finished|fixed|shipped|merged|completed|kar diya|ho 
                   r"|kar li|kar liya)\b", re.I)
 BLOCKED = re.compile(r"\b(blocked|blocks on|stuck|waiting on|waiting for|atka|atki)\b", re.I)
 SCRATCH = re.compile(r"\b(?:scratch that|cancel that|never mind|rehne do)\b", re.I)
-DOCS = re.compile(r"\b(docs?|readme|guide|notes)\b", re.I)
+BUG = re.compile(r"\b(bug|fix|fixed|broken|crash|error|flaky)\b", re.I)
+FEATURE = re.compile(r"\b(add|build|new|feature|support|implement|export)\b", re.I)
 INFRA = re.compile(r"\b(ci|deploy|docker|pipeline|build|config|infra)\b", re.I)
 ME = re.compile(r"\b(i|i'm|i'll|me|my|main|maine|mujhe|mera)\b", re.I)
 FILLER = re.compile(r"([\s,.-]*\b(no|nahi|actually|wait|uh|um|okay|ok|so)\b)+[\s,.-]*$", re.I)
@@ -19,7 +20,10 @@ def section(text):
 
 
 def label(text):
-    return "docs" if DOCS.search(text) else "infra" if INFRA.search(text) else "core"
+    for name, pattern in (("infra", INFRA), ("bug", BUG), ("feature", FEATURE)):
+        if pattern.search(text):
+            return name
+    return "core"
 
 
 def assignee(text, team):

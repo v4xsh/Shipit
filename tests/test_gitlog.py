@@ -29,12 +29,14 @@ class GitlogTest(unittest.TestCase):
         self.dir.cleanup()
 
     def test_labels(self):
-        self.assertEqual(gitlog.guess_label("docs: x", ["a.py"]), "docs")
-        self.assertEqual(gitlog.guess_label("tidy", ["README.md"]), "docs")
+        self.assertEqual(gitlog.guess_label("fix: x", ["a.py"]), "bug")
+        self.assertEqual(gitlog.guess_label("Fixed login", ["a.py"]), "bug")
+        self.assertEqual(gitlog.guess_label("feat: x", ["a.py"]), "feature")
+        self.assertEqual(gitlog.guess_label("tidy", ["README.md"]), "core")
         self.assertEqual(gitlog.guess_label("ci: x", []), "infra")
         self.assertEqual(gitlog.guess_label("bump", [".github/workflows/t.yml"]), "infra")
         self.assertEqual(gitlog.guess_label("bump", ["requirements.txt"]), "infra")
-        self.assertEqual(gitlog.guess_label("feat(api): x", ["api.py", "README.md"]), "core")
+        self.assertEqual(gitlog.guess_label("refactor(api): x", ["api.py", "README.md"]), "core")
 
     def test_clean(self):
         self.assertEqual(gitlog.clean("feat(board)!: add cards"), "Add cards")
@@ -48,7 +50,7 @@ class GitlogTest(unittest.TestCase):
         commit(self.root, "c.py", "fix: balance rounding")
         d = gitlog.drafts(self.root, "v4xsh", since_commit=last, author="me@x.dev")
         self.assertEqual([i["title"] for i in d], ["Write guide", "Balance rounding"])
-        self.assertEqual([i["label"] for i in d], ["docs", "core"])
+        self.assertEqual([i["label"] for i in d], ["core", "bug"])
         self.assertTrue(all(i["section"] == "done" and i["assignee"] == "v4xsh" for i in d))
         self.assertTrue(d[0]["said"].startswith("commit "))
 

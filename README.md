@@ -6,7 +6,7 @@ Time saved so far: 18.7 min
 
 # Shipit
 
-**Say it. It's tagged. It started.**
+**Say it. It's tracked. It started.**
 
 Shipit is a command-line tool for developers. Instead of typing a standup, you talk, and it ships.
 
@@ -20,7 +20,7 @@ Shipit is a command-line tool for developers. Instead of typing a standup, you t
    "assign it to me", "scratch that", "actually make that Friday". Speak for the whole team,
    or pass a meeting transcript with `--from-notes notes.txt`.
 5. Groq (`openai/gpt-oss-120b`) turns it into **done / blocked / next** items, each with a
-   title, label (docs/infra/core), assignee login, deadline, dependencies and the exact words said.
+   title, label (bug/feature/infra/core), assignee login, deadline, dependencies and the exact words said.
 6. *(coming)* A live dark-theme board on localhost, a confirm card, then GitHub issues,
    labels, milestones, closes, a receipt with time saved, and `--agent N` to hand the next
    issues to Claude Code. See [plan.md](plan.md).
@@ -30,7 +30,7 @@ Shipit is a command-line tool for developers. Instead of typing a standup, you t
 ```sh
 cp .env.example .env                 # add GROQ_API_KEY; .env is gitignored
 gh auth login
-python -m shipit                     # dictate with Win+H, empty line to finish
+python -m shipit                     # dictate with Wispr Flow, empty line to finish
 python -m shipit --text "I fixed login. Milap takes the balance bug by Friday."
 ```
 

@@ -9,7 +9,7 @@ from unittest import mock
 
 from shipit import cards, fallback, groq, items, match, parser, prompt
 
-FIX = Path(__file__).parent / "fixtures"
+FIX = Path(parser.__file__).parent / "fixtures"
 DATA = json.loads((FIX / "standups.json").read_text(encoding="utf-8"))
 TEAM, TODAY = DATA["team"], datetime.date.fromisoformat(DATA["today"])
 
@@ -52,10 +52,12 @@ class RecordedStandupTest(unittest.TestCase):
         self.assertEqual(got["i3"]["assignee"], "milap-dev")
         self.assertEqual(got["i3"]["changes"][0]["from"], "v4xsh")  # "me" resolved
         self.assertEqual(got["i4"]["deadline"], "2026-10-09")       # "make that Friday"
+        self.assertEqual(got["i5"]["title"], "Get Render API keys")
+        self.assertEqual(got["i3"]["depends_on"], [])
 
     def test_hinglish_scratch_and_dependency(self):
         got = by_id(parse(2))
-        self.assertEqual(got["i1"]["label"], "docs")
+        self.assertEqual(got["i1"]["assignee"], "v4xsh")  # "maine"
         self.assertTrue(got["i3"]["scratched"])
         self.assertEqual(got["i4"]["depends_on"], ["i2"])
         self.assertEqual(got["i4"]["deadline"], "2026-10-13")
@@ -68,8 +70,10 @@ class RecordedStandupTest(unittest.TestCase):
         self.assertEqual(titles.count("Fix flaky parser test"), 0)
         self.assertEqual(r["items"][0]["id"], "c1")
         got = by_id(r)
-        self.assertEqual(got["i2"]["assignee"], "milap-dev")  # nickname Milu
-        self.assertEqual(got["i2"]["changes"][0]["from"], "Rahul")  # unknown name kept
+        self.assertEqual(got["i3"]["assignee"], "milap-dev")  # nickname Milu
+        self.assertEqual(got["i3"]["changes"][0]["from"], "Rahul")  # unknown name kept
+        self.assertEqual((got["i3"]["section"], got["i3"]["depends_on"]), ("blocked", ["i2"]))
+        self.assertEqual(got["i2"]["section"], "next")
         self.assertEqual(got["i5"]["assignee"], "v4xsh")
 
 
@@ -110,7 +114,7 @@ class FallbackTest(unittest.TestCase):
     def test_hinglish_keywords(self):
         got = fallback.split(DATA["standups"][1], TEAM)
         self.assertEqual(got[0]["section"], "done")
-        self.assertEqual(got[0]["label"], "docs")
+        self.assertEqual(got[0]["label"], "core")
         self.assertEqual([i["title"] for i in got if i["scratched"]],
                          ["Uske baad Docker setup karunga"])  # "..., nahi scratch that"
         self.assertEqual(got[4]["assignee"], "milap-dev")

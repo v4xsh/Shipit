@@ -1,6 +1,7 @@
 """Minimal Groq chat client over urllib. Raises GroqError with a friendly message."""
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 
@@ -20,6 +21,17 @@ def post(url, headers, body, timeout):
         return json.loads(resp.read().decode("utf-8"))
 
 
+def rate_limit_wait(error, longest=15):
+    """Seconds to wait on a 429 if Groq asks for a short pause, else None."""
+    if error.code != 429:
+        return None
+    try:
+        wait = float((error.headers or {}).get("retry-after", 2))
+    except ValueError:
+        wait = 2
+    return wait if wait <= longest else None
+
+
 def chat(messages, transport=post, timeout=30):
     """Send messages, return the reply text (a JSON string)."""
     key = os.environ.get("GROQ_API_KEY")
@@ -30,9 +42,18 @@ def chat(messages, transport=post, timeout=30):
     body = {"model": os.environ.get("GROQ_MODEL", MODEL), "temperature": 0,
             "response_format": {"type": "json_object"}, "messages": messages}
     try:
-        data = transport(URL, headers, body, timeout)
+        try:
+            data = transport(URL, headers, body, timeout)
+        except urllib.error.HTTPError as e:
+            wait = rate_limit_wait(e)
+            if wait is None:
+                raise
+            time.sleep(wait)
+            data = transport(URL, headers, body, timeout)
     except urllib.error.HTTPError as e:
         detail = e.read().decode("utf-8", "replace")
+        if e.code == 429:
+            raise GroqError("Groq is rate-limiting us")
         raise GroqError(f"Groq said {e.code}", bad_json="json_validate_failed" in detail)
     except (urllib.error.URLError, TimeoutError, OSError, ValueError) as e:
         raise GroqError(f"Couldn't reach Groq ({e.__class__.__name__})")

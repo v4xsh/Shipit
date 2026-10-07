@@ -8,7 +8,7 @@ from .console import Oops, say, setup, warn
 
 
 def args(argv):
-    p = argparse.ArgumentParser(prog="shipit", description="Say it. It's tagged. It started.")
+    p = argparse.ArgumentParser(prog="shipit", description="Say it. It's tracked. It started.")
     p.add_argument("--text", help="the standup as text instead of dictating")
     p.add_argument("--from-notes", metavar="FILE", help="a meeting transcript file")
     return p.parse_args(argv)
@@ -24,7 +24,7 @@ def listen(opts):
             raise Oops(f"Couldn't read {opts.from_notes}.")
     if not sys.stdin.isatty():
         return sys.stdin.read()
-    say("Speak your standup (Win+H to dictate). Empty line to finish:")
+    say("Dictate your standup with Wispr Flow. Empty line to finish:")
     lines = []
     while (line := input("> ").strip()):
         lines.append(line)
