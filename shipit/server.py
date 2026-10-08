@@ -4,6 +4,8 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from . import __version__
+
 PAGE = Path(__file__).with_name("board.html")
 
 
@@ -17,7 +19,7 @@ def handler(hub):
                 return self.stream()
             if self.path not in ("/", "/index.html"):
                 return self.send_error(404)
-            body = PAGE.read_bytes()
+            body = PAGE.read_text(encoding="utf-8").replace("{{version}}", __version__).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
