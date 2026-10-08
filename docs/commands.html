@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commands · Shipit</title>
+<meta name="description" content="Every Shipit flag, with an example.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<nav class="wrap"><a class="brand" href="index.html"><span class="logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a0c10" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>Shipit</a>
+<div class="links"><a href="index.html#how">How it works</a><a href="commands.html" aria-current="page">Commands</a><a href="built-by-voice.html">Built by voice</a><a href="https://github.com/v4xsh/Shipit">GitHub ↗</a></div></nav>
+
+<main class="wrap">
+<h1>Commands</h1>
+<p class="lead">One command, a few flags. Run it inside any Git repo with a GitHub <code>origin</code>.</p>
+
+<section class="flags">
+  <div class="card flag"><h3><code>shipit</code></h3>
+    <p>The standup. Drafts done items from your commits, listens (dictate with Wispr Flow, empty line to
+    finish), shows the live board, asks yes / edit / no, then ships to GitHub and prints the receipt.</p>
+    <pre>shipit</pre></div>
+
+  <div class="card flag"><h3><code>--text TEXT</code></h3>
+    <p>Say it as an argument instead of dictating. Handy in scripts and demos.</p>
+    <pre>shipit --text "Kal maine login fix kiya. Milap takes the balance bug by Friday."</pre></div>
+
+  <div class="card flag"><h3><code>--from-notes FILE</code></h3>
+    <p>Feed a meeting transcript. One meeting becomes issues for everyone mentioned.</p>
+    <pre>shipit --from-notes sync-notes.txt</pre></div>
+
+  <div class="card flag"><h3><code>--dry-run</code></h3>
+    <p>Everything runs except the GitHub writes, which are printed as <code>gh</code> commands. Reads still
+    happen, so duplicate checks are real. State isn't saved.</p>
+    <pre>shipit --dry-run</pre></div>
+
+  <div class="card flag"><h3><code>--agent N</code></h3>
+    <p>After shipping, Claude Code (<code>claude -p</code>) works your top N next issues in parallel, each in
+    its own git worktree on <code>shipit/issue-&lt;n&gt;</code>. Shipit runs the tests, pushes, and opens a PR that
+    closes the issue and quotes what you said. A failed agent keeps its branch.</p>
+    <pre>shipit --agent 2</pre></div>
+
+  <div class="card flag"><h3><code>--debug</code></h3>
+    <p>Ramble about a bug. Each hypothesis becomes a card with its own investigating agent, which reports
+    confirmed or ruled out with evidence. Say “fix it” for a PR with a regression test.</p>
+    <pre>shipit --debug --text "Chart shows negative saved time. Maybe the parser reads ? as zero..."</pre></div>
+
+  <div class="card flag"><h3><code>--review PR</code></h3>
+    <p>Speak a review of a pull request. It's written up and posted, an agent addresses it on the PR branch
+    and pushes, and saying “merge” squash-merges it.</p>
+    <pre>shipit --review 7</pre></div>
+
+  <div class="card flag"><h3><code>--replay</code></h3>
+    <p>Plays three recorded standups (English, Hinglish, meeting notes) through the board. No keys, no
+    network: the demo that never dies on camera.</p>
+    <pre>shipit --replay</pre></div>
+
+  <div class="card flag"><h3><code>--no-board</code></h3>
+    <p>Terminal only; don't start the board or open a browser.</p>
+    <pre>shipit --no-board</pre></div>
+
+  <div class="card flag"><h3><code>--port PORT</code></h3>
+    <p>Where the live board listens (default 7878; Shipit picks a free one if that's taken).</p>
+    <pre>shipit --port 9000</pre></div>
+
+  <div class="card flag"><h3><code>--version</code></h3>
+    <p>Print the version and exit.</p>
+    <pre>shipit --version</pre></div>
+
+  <div class="card flag"><h3><code>-h, --help</code></h3>
+    <p>List the flags.</p>
+    <pre>shipit --help</pre></div>
+</section>
+
+<section>
+  <h2>Environment</h2>
+  <p class="muted"><code>GROQ_API_KEY</code> (required for parsing; put it in your repo's gitignored
+  <code>.env</code>), <code>GROQ_MODEL</code> (default <code>openai/gpt-oss-120b</code>),
+  <code>SHIPIT_TEST_CMD</code> (how agents' work is tested; auto-detected otherwise).</p>
+</section>
+</main>
+<footer class="wrap">Shipit · Python stdlib · <a href="https://github.com/v4xsh/Shipit">github.com/v4xsh/Shipit</a></footer>
+</body></html>

@@ -1,3 +1,12 @@
+Metadata-Version: 2.4
+Name: shipit
+Version: 0.1.0
+Summary: Say it. It's tracked. It's started. Voice standups that ship to GitHub.
+Project-URL: Homepage, https://v4xsh.github.io/Shipit/
+Project-URL: Source, https://github.com/v4xsh/Shipit
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+
 <!-- chart -->
 ![Spoken vs typed minutes per prompt](chart.svg)
 
@@ -8,7 +17,7 @@
 | 2 | 406 | 2.6 | 10.2 | 7.6 |
 | 3 | 266 | 1.7 | 6.7 | 4.9 |
 | 4 | 288 | 1.6 | 7.2 | 5.6 |
-| 5 | 325 | ? | 8.1 | ? |
+| 5 | 325 | ? | 8.1 | 6.0 |
 | **Total** | **1945** | **11.9** | **48.6** | **36.8** |
 <!-- /chart -->
 
@@ -85,7 +94,7 @@ Shipit was built by voice: every prompt was dictated with Wispr Flow into Claude
 word, slips and all, with seconds spoken against typing time at 40 wpm. That's the chart at the top.
 
 <!-- stats -->
-**6 voice prompts → 24 commits → 91 tests.** [Read the voice log](voice-log.md), word for word.
+**6 voice prompts → 23 commits → 85 tests.** [Read the voice log](voice-log.md), word for word.
 <!-- /stats -->
 
 Every commit ends with the voice prompt that asked for it (`Voice prompt: 5`), including the commits

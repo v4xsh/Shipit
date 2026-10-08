@@ -1,3 +1,4 @@
 #!/bin/sh
-# Regenerate the chart and keep README in sync on every commit.
-python chart.py && git add chart.svg README.md
+# Keep README and the docs site in sync on every commit: chart, numbers, voice log page.
+python chart.py && python stats.py --pending && python docs/build.py &&
+git add chart.svg README.md docs/built-by-voice.html docs/chart.svg

@@ -44,12 +44,13 @@ class ChartTest(unittest.TestCase):
 
     def test_table(self):
         t = table(ROWS)
-        self.assertIn("| 2 | 50 | ? | 1.2 | 0.9 |", t)
+        self.assertIn("| 2 | 50 | ? | 1.2 | ? |", t)
         self.assertIn("| **Total** | **300** | **3.0** | **7.5** | **4.5** |", t)
 
-    def test_table_untimed_saved_is_positive(self):
-        # Regression: untimed prompts showed estimate - typed (negative).
-        self.assertIn("| 9 | 100 | ? | 2.5 | 1.8 |", table([(9, 100, None, 150)]))
+    def test_table_untimed_prompt_is_unknown_not_negative(self):
+        # Regression (PR #8): an untimed prompt once showed negative minutes saved.
+        row = table([(9, 100, None, 150)]).splitlines()[2]
+        self.assertEqual(row, "| 9 | 100 | ? | 2.5 | ? |")
 
     def test_embed_at_top_and_idempotent(self):
         once = embed("# Shipit\n", ROWS)

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shipit · Say it. It's tracked. It's started.</title>
+<meta name="description" content="Shipit: say your standup, it ships to GitHub.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<nav class="wrap"><a class="brand" href="index.html"><span class="logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a0c10" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>Shipit</a>
+<div class="links"><a href="#how">How it works</a><a href="commands.html">Commands</a><a href="built-by-voice.html">Built by voice</a><a href="https://github.com/v4xsh/Shipit">GitHub ↗</a></div></nav>
+
+<main class="wrap">
+<section>
+  <h1>Say it. <span class="grad">It's tracked.</span><br>It's started.</h1>
+  <p class="lead">Shipit is a command-line tool for developers. Instead of typing a standup, you talk,
+  and it ships: GitHub issues with labels, owners and deadlines, a live board, and Claude Code agents
+  that turn your next issues into pull requests.</p>
+  <div class="row"><a class="btn primary" href="#install">Install in 60 seconds</a>
+  <a class="btn" href="https://github.com/v4xsh/Shipit">View on GitHub ↗</a></div>
+  <img class="shot" src="img/board.png" alt="The Shipit live board: Done, Blocked, Next and Agent columns">
+</section>
+
+<section id="install">
+  <h2>60-second install</h2>
+  <p class="muted">Python 3.10+, the GitHub CLI, and a free <a href="https://console.groq.com/keys">Groq key</a>.
+  No other dependencies.</p>
+<pre><span class="c"># 1. install (15 s)</span>
+pip install git+https://github.com/v4xsh/Shipit
+<span class="c"># 2. sign in to GitHub once (20 s)</span>
+gh auth login
+<span class="c"># 3. in your repo: add the Groq key to a gitignored .env (10 s)</span>
+echo GROQ_API_KEY=gsk_your_key &gt;&gt; .env
+<span class="c"># 4. watch the demo board, no keys or network needed (15 s)</span>
+shipit --replay
+<span class="c"># then for real: dictate your standup with Wispr Flow, empty line to finish</span>
+shipit</pre>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step"><div><h3>Speak</h3><p>Run <code>shipit</code> in any Git repo. Your commits since the
+      last run are already drafted as done. Dictate the rest with Wispr Flow, in English or Hinglish, messy is
+      fine: “Milap takes the balance bug… actually make that Friday… scratch that.”</p></div>
+      <img class="shot" src="img/step-speak.png" alt="Board listening, with the transcript and drafted commits"></div>
+    <div class="step"><div><h3>Watch the board</h3><p>Groq turns it into done, blocked and next items. Cards
+      slide in quoting your words, with label, owner, deadline and dependencies. Corrections play out: scratched
+      cards strike and fade, reassigned avatars flip, changed deadlines pulse.</p></div>
+      <img class="shot" src="img/step-board.png" alt="Board with cards in Done, Blocked and Next"></div>
+    <div class="step"><div><h3>Say yes</h3><p>A confirm card in the terminal: yes, edit or no. Nothing touches
+      GitHub before yes. Say an edit (“docs wala Milap ko de do”) and the board re-plays it.</p></div>
+      <img class="shot" src="img/step-confirm.png" alt="The terminal confirm card"></div>
+    <div class="step"><div><h3>It's on GitHub</h3><p>One issue per item, with labels, assignee, a due-date
+      milestone and <code>Blocked by #n</code> links, never duplicated. Done items close their issue. Every
+      body ends with what you actually said.</p></div>
+      <img class="shot" src="img/step-issue.png" alt="A GitHub issue created by Shipit"></div>
+    <div class="step"><div><h3>Agents start</h3><p><code>--agent 1</code> hands your next issue to Claude Code
+      in its own worktree. Shipit runs the tests itself, then pushes and opens a PR that closes the issue.</p></div>
+      <img class="shot" src="img/step-pr.png" alt="A pull request opened by the Shipit agent"></div>
+    <div class="step"><div><h3>Get the receipt</h3><p>Words, issues opened and closed, minutes saved against
+      typing at 40 wpm, and a running total. If someone is carrying clearly more, it says so.</p></div>
+      <img class="shot" src="img/step-receipt.png" alt="The receipt counting up minutes saved"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Built by voice</h2>
+  <p class="muted">Shipit itself was dictated, prompt by prompt.
+  <a href="built-by-voice.html">See every prompt, word for word, and the minutes it saved →</a></p>
+  <img class="shot" src="chart.svg" alt="Spoken vs typed minutes per prompt">
+</section>
+</main>
+<footer class="wrap">Shipit · Python stdlib · <a href="https://github.com/v4xsh/Shipit">github.com/v4xsh/Shipit</a></footer>
+</body></html>

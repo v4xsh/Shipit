@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shipit"
+version = "0.1.0"
+description = "Say it. It's tracked. It's started. Voice standups that ship to GitHub."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+shipit = "shipit.cli:entry"
+
+[project.urls]
+Homepage = "https://v4xsh.github.io/Shipit/"
+Source = "https://github.com/v4xsh/Shipit"
+
+[tool.setuptools]
+packages = ["shipit"]
+
+[tool.setuptools.package-data]
+shipit = ["board.html", "fixtures/*.json"]

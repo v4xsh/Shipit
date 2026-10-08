@@ -69,7 +69,7 @@ Scratched items and `changes` stay in the result so the board can animate them.
   status to the board's Agent column.
 - Windows: call `claude.cmd` with `shell=True`, `encoding="utf-8"`.
 
-## 8. Debug ✅, review ✅, docs site
+## 8. Debug ✅, review ✅, docs site ✅
 - `--debug`: ramble about a bug; each hypothesis becomes a card, then agent runs.
 - `--review PR`: speak a review, post it as a PR comment, rerun the agent to address it.
 - `docs/` static site for GitHub Pages.

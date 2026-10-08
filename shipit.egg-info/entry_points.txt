@@ -1,0 +1,2 @@
+[console_scripts]
+shipit = shipit.cli:entry
