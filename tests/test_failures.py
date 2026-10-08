@@ -38,6 +38,19 @@ class GitHubFailingTest(unittest.TestCase):
         self.assertIn('Said: "Aaj CI fix karna hai"', copy.call_args[0][0])
         self.assertIn("## Fix CI", say.call_args[0][0])
 
+    def test_unreachable_github_is_said_once(self):
+        calls = []
+        gh = Gh("o/r", run=lambda args, **k: calls.append(args) or (1, "", "gh: not found"))
+        with mock.patch("shutil.which", return_value=None):
+            self.assertEqual(flow.read_open(gh), [])
+        with mock.patch("shipit.flow.clipboard.copy", return_value=True), mock.patch("shipit.flow.say"), \
+                mock.patch("shipit.flow.warn") as warn:
+            self.assertIsNone(flow.deliver(ship.plan(FOUND, []), gh, mock.Mock(), "d"))
+            self.assertIsNone(flow.balance(gh, TEAM, mock.Mock()))
+        self.assertEqual(warn.call_count, 1)
+        self.assertIn("isn't installed", warn.call_args[0][0])
+        self.assertEqual(len(calls), 1)  # no retries against a GitHub that isn't there
+
     def test_dry_run_survives_failed_reads(self):
         gh = Gh("o/r", dry_run=True, run=lambda *a, **k: (1, "", "error connecting"), echo=mock.Mock())
         done = ship.execute(ship.plan(FOUND, []), gh, "2026-10-08")

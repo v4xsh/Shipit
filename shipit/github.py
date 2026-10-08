@@ -19,6 +19,7 @@ class Gh:
     def __init__(self, slug, dry_run=False, run=proc.run, echo=say):
         self.slug, self.dry, self.run, self.echo = slug, dry_run, run, echo
         self.fake = 0
+        self.down = None  # why GitHub is unreachable, once a read has failed
 
     def call(self, args, input=None, write=False):
         if write and self.dry:

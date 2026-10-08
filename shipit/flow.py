@@ -7,10 +7,13 @@ from .github import GhError
 
 
 def read_open(gh):
+    """Open issues, or [] if GitHub is out of reach. The reason is kept and said once, at the end."""
+    if getattr(gh, "down", None):
+        return []
     try:
         return gh.open_issues() or []
     except GhError as e:
-        warn(f"Couldn't read open issues ({e}); treating every item as new.")
+        gh.down = str(e)
         return []
 
 
@@ -53,6 +56,9 @@ def deliver(p, gh, board, today, offline=False):
     if offline:
         handover(p, board, today, "Still offline, so nothing went to GitHub.")
         return None
+    if getattr(gh, "down", None):
+        handover(p, board, today, f"GitHub is out of reach: {gh.down}.")
+        return None
     board.status("shipping")
     try:
         done = ship.execute(p, gh, today,
@@ -72,6 +78,8 @@ def deliver(p, gh, board, today, offline=False):
 def balance(gh, crew, board, ids=None, read=input, chat=None, opened=()):
     """Say who carries the most; let me move one issue by voice."""
     open_issues = read_open(gh)
+    if getattr(gh, "down", None):
+        return None
     if gh.dry:  # nothing was created, so count what would have been
         open_issues += [{"number": n, "title": i["title"],
                          "assignees": [{"login": i["assignee"]}] if i["assignee"] else []}
