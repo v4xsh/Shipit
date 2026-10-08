@@ -106,7 +106,7 @@ def table(rows):
     for num, words, spoken, typed in rows:
         # Not timed yet: estimate the spoken time from dictation speed (~150 wpm).
         estimate = words * 60 / 150
-        saved = estimate - typed if spoken is None else typed - spoken
+        saved = typed - estimate if spoken is None else typed - spoken
         lines.append(f"| {num} | {words} | {fmt(spoken)} | {fmt(typed)} | {fmt(saved)} |")
     spoken, typed, saved = totals(rows)
     words = sum(w for _, w, s, _ in rows if s is not None)
