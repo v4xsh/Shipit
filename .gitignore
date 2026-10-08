@@ -1,3 +1,5 @@
 .env
 .shipit/
 __pycache__/
+build/
+*.egg-info/
