@@ -4,6 +4,7 @@ import unittest
 import urllib.request
 from unittest import mock
 
+import shipit
 from shipit import cli, live, receipt, replay, server
 from shipit.hub import Hub
 
@@ -44,6 +45,8 @@ class ServerTest(unittest.TestCase):
         with urllib.request.urlopen(self.url, timeout=5) as r:
             html = r.read().decode("utf-8")
         self.assertIn("<title>Shipit board</title>", html)
+        self.assertIn(f"v{shipit.__version__}", html)
+        self.assertNotIn("{{version}}", html)
         for col in ("done", "blocked", "next", "agent"):
             self.assertIn(f'data-col="{col}"', html)
 
