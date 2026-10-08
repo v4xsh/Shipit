@@ -172,9 +172,9 @@ That was our prompt 4. Go ahead and build it.
 ## Prompt 5
 - Time: 2026-10-08 13:17
 - Words: 325
-- Spoken: ? s
+- Spoken: 109 s
 - Typing: 488 s
-- Saved: ? s
+- Saved: 379 s
 
 ```text
 Prompt 4 took 98 seconds. Agent used the current prompt number in their commits. Fix the leading spaces on line 1 of CLAUDE.md if it's not done. That was a deletion slip.
@@ -203,4 +203,20 @@ Then the README:
 - a link to the voice log
 - Run Thus
 End side: run everything, commit, push, and that was prompt 5. Go ahead and build it.
+```
+
+## Prompt 6
+- Time: 2026-10-08 18:03
+- Words: 256
+- Spoken: ? s
+- Typing: 384 s
+- Saved: ? s
+
+```text
+Prompt 5 took 109 seconds. This is the final pass.
+1. Review the whole repo like a judge who has never seen it and has 5 minutes. Read the README, sideboard, and every command. Fix anything confusing, slow, or that could crash on camera. Make sure GH failing, Grok failing, Claude missing, and no internet each get one friendly line in the Markdown and clipboard fallback.
+2. Meeting input: add a doc section and a README section called "From a Meeting" that explains --from-notes. Say Wispr Flow's Notetaker is the natural source. The MCP server is Mac only today, so on Windows, you export the notes and pass the file. It includes sample meeting.md in examples with a two-person standup between me and Milab that produces issues for both of us. It asks for it.
+3. Add a section to the README called "Notes for the Wispr team" with 5 real friction points from dictating into Claude code during this build, taken from the mishears in the voice-log, like Grok heard as Grok, didup as didup, core as ch1, and one or two things that could have helped, like a dictionary for repo words or a command to send the prompt.
+4. In how this was built, state the account was created through the HSGOR fielding. The Wispr Flow history matches the voice-log.
+5. Update counts everywhere and make sure the chart and site regenerate. No keys anywhere in the history. .env.example is blank. Run all tests, commit, push, and that was prompt 6. Go ahead.
 ```

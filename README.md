@@ -8,8 +8,9 @@
 | 2 | 406 | 2.6 | 10.2 | 7.6 |
 | 3 | 266 | 1.7 | 6.7 | 4.9 |
 | 4 | 288 | 1.6 | 7.2 | 5.6 |
-| 5 | 325 | ? | 8.1 | ? |
-| **Total** | **1945** | **11.9** | **48.6** | **36.8** |
+| 5 | 325 | 1.8 | 8.1 | 6.3 |
+| 6 | 256 | ? | 6.4 | ? |
+| **Total** | **2270** | **13.7** | **56.8** | **43.1** |
 <!-- /chart -->
 
 ![The Shipit live board: Done, Blocked, Next and Agent columns, with the receipt](docs/img/board.png)
@@ -85,7 +86,7 @@ Shipit was built by voice: every prompt was dictated with Wispr Flow into Claude
 word, slips and all, with seconds spoken against typing time at 40 wpm. That's the chart at the top.
 
 <!-- stats -->
-**6 voice prompts → 25 commits → 91 tests.** [Read the voice log](voice-log.md), word for word.
+**7 voice prompts → 26 commits → 91 tests.** [Read the voice log](voice-log.md), word for word.
 <!-- /stats -->
 
 Every commit ends with the voice prompt that asked for it (`Voice prompt: 5`), including the commits

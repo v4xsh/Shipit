@@ -12,10 +12,10 @@
 <main class="wrap">
 <h1>Built by <span class="grad">voice</span></h1>
 <p class="lead">Every prompt that built Shipit was dictated with Wispr Flow into Claude Code. Mouse and Enter were
-used only for approvals. 11.9 minutes of talking replaced 48.6 minutes of typing at 40 wpm:
-<b style="color:var(--done)">36.8 minutes saved</b>.</p>
+used only for approvals. 13.7 minutes of talking replaced 56.8 minutes of typing at 40 wpm:
+<b style="color:var(--done)">43.1 minutes saved</b>.</p>
 <section><img class="shot" src="chart.svg" alt="Spoken vs typed minutes per prompt"></section>
-<section><h2>Per prompt</h2><table><thead><tr><th>Prompt</th><th>Words</th><th>Spoken (min)</th><th>Typed (min)</th><th>Saved (min)</th></tr></thead><tbody><tr><td>#0</td><td>165</td><td>1.2</td><td>4.1</td><td>2.9</td></tr><tr><td>#1</td><td>820</td><td>4.8</td><td>20.5</td><td>15.8</td></tr><tr><td>#2</td><td>406</td><td>2.6</td><td>10.2</td><td>7.6</td></tr><tr><td>#3</td><td>266</td><td>1.7</td><td>6.7</td><td>4.9</td></tr><tr><td>#4</td><td>288</td><td>1.6</td><td>7.2</td><td>5.6</td></tr><tr><td>#5</td><td>325</td><td>?</td><td>8.1</td><td>?</td></tr><tr class="total"><td>Total</td><td>1945</td><td>11.9</td><td>48.6</td><td>36.8</td></tr></tbody></table></section>
+<section><h2>Per prompt</h2><table><thead><tr><th>Prompt</th><th>Words</th><th>Spoken (min)</th><th>Typed (min)</th><th>Saved (min)</th></tr></thead><tbody><tr><td>#0</td><td>165</td><td>1.2</td><td>4.1</td><td>2.9</td></tr><tr><td>#1</td><td>820</td><td>4.8</td><td>20.5</td><td>15.8</td></tr><tr><td>#2</td><td>406</td><td>2.6</td><td>10.2</td><td>7.6</td></tr><tr><td>#3</td><td>266</td><td>1.7</td><td>6.7</td><td>4.9</td></tr><tr><td>#4</td><td>288</td><td>1.6</td><td>7.2</td><td>5.6</td></tr><tr><td>#5</td><td>325</td><td>1.8</td><td>8.1</td><td>6.3</td></tr><tr><td>#6</td><td>256</td><td>?</td><td>6.4</td><td>?</td></tr><tr class="total"><td>Total</td><td>2270</td><td>13.7</td><td>56.8</td><td>43.1</td></tr></tbody></table></section>
 <section><h2>The full voice log</h2><p class="muted">Word for word, as transcribed, slips and all.
 Typing time assumes 40 wpm; saved = typing − spoken; <code>?</code> means not timed yet.</p><article class="prompt" id="prompt-0"><div class="meta"><b>Prompt 0</b><span>2026-10-07 12:10</span><span><b>165</b> words</span><span><b>73 s</b> spoken</span><span><b>248 s</b> to type</span><span class="saved"><b>175 s</b> saved</span></div><pre>what&#x27;s up, dude? New project called Shipit. Make a Claude.md with these rules:
 1. Log every prompt in voice log.md word for word, with timestamp, word count, the seconds I took to say it (which I&#x27;ll tell you later), typing time (40 minutes, 40 words a minute), and time saved. Easy: replace with redacted.
@@ -129,7 +129,7 @@ Now, step 7: the agent + debug and review.
 - Test everything with Claude and GH mocked, then do one real run.
 - `shipit -agent 1` on this repo. Let the agent take a small real issue and show me that PR it&#x27;s open.
 - Commit.
-That was our prompt 4. Go ahead and build it.</pre></article><article class="prompt" id="prompt-5"><div class="meta"><b>Prompt 5</b><span>2026-10-08 13:17</span><span><b>325</b> words</span><span><b>? s</b> spoken</span><span><b>488 s</b> to type</span><span class="saved"><b>? s</b> saved</span></div><pre>Prompt 4 took 98 seconds. Agent used the current prompt number in their commits. Fix the leading spaces on line 1 of CLAUDE.md if it&#x27;s not done. That was a deletion slip.
+That was our prompt 4. Go ahead and build it.</pre></article><article class="prompt" id="prompt-5"><div class="meta"><b>Prompt 5</b><span>2026-10-08 13:17</span><span><b>325</b> words</span><span><b>109 s</b> spoken</span><span><b>488 s</b> to type</span><span class="saved"><b>379 s</b> saved</span></div><pre>Prompt 4 took 98 seconds. Agent used the current prompt number in their commits. Fix the leading spaces on line 1 of CLAUDE.md if it&#x27;s not done. That was a deletion slip.
 Now run the two modes for real:
 1. `--review 7`. The review looks good. Also print the version in the board header, then merge it. Take it through comments, agent fix, test, and merge, and show me.
 2. `--debug`. Plant a small real bug in the chart script, like save minute going negative when spoken time is missing. Then feed this ramble: chart shows negative save time. Maybe the parser reads the question mark as zero, or maybe the subtraction is backward, or the hook runs before the log is written. Let the hypothesis race and fix it with the PR.
@@ -154,6 +154,11 @@ Then the README:
 - Test Count
 - a link to the voice log
 - Run Thus
-End side: run everything, commit, push, and that was prompt 5. Go ahead and build it.</pre></article></section></main>
+End side: run everything, commit, push, and that was prompt 5. Go ahead and build it.</pre></article><article class="prompt" id="prompt-6"><div class="meta"><b>Prompt 6</b><span>2026-10-08 18:03</span><span><b>256</b> words</span><span><b>? s</b> spoken</span><span><b>384 s</b> to type</span><span class="saved"><b>? s</b> saved</span></div><pre>Prompt 5 took 109 seconds. This is the final pass.
+1. Review the whole repo like a judge who has never seen it and has 5 minutes. Read the README, sideboard, and every command. Fix anything confusing, slow, or that could crash on camera. Make sure GH failing, Grok failing, Claude missing, and no internet each get one friendly line in the Markdown and clipboard fallback.
+2. Meeting input: add a doc section and a README section called &quot;From a Meeting&quot; that explains --from-notes. Say Wispr Flow&#x27;s Notetaker is the natural source. The MCP server is Mac only today, so on Windows, you export the notes and pass the file. It includes sample meeting.md in examples with a two-person standup between me and Milab that produces issues for both of us. It asks for it.
+3. Add a section to the README called &quot;Notes for the Wispr team&quot; with 5 real friction points from dictating into Claude code during this build, taken from the mishears in the voice-log, like Grok heard as Grok, didup as didup, core as ch1, and one or two things that could have helped, like a dictionary for repo words or a command to send the prompt.
+4. In how this was built, state the account was created through the HSGOR fielding. The Wispr Flow history matches the voice-log.
+5. Update counts everywhere and make sure the chart and site regenerate. No keys anywhere in the history. .env.example is blank. Run all tests, commit, push, and that was prompt 6. Go ahead.</pre></article></section></main>
 <footer class="wrap">Shipit · Python stdlib · <a href="https://github.com/v4xsh/Shipit">github.com/v4xsh/Shipit</a></footer>
 </body></html>
