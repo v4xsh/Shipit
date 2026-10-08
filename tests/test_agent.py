@@ -129,6 +129,13 @@ class AgentTest(Repo):
         self.assertEqual([s for s in statuses if s != "working"],
                          ["branch created", "testing", "pushing", "PR open"])
 
+    def test_commits_signed_with_current_voice_prompt(self):
+        (self.root / "voice-log.md").write_text("## Prompt 3\n\n## Prompt 4\n", encoding="utf-8")
+        run = fake_claude()
+        agent.work(7, items.make("i1", "next", "x", "y"), self.root, "main", self.gh, self.board, run)
+        self.assertIn('"Voice prompt: 4"', run.calls[0][0])
+        self.assertEqual(agent.trailer(self.root.parent), "")  # no voice log, no trailer
+
     def test_failed_agent_keeps_branch_and_opens_nothing(self):
         r = agent.work(7, items.make("i1", "next", "x", "y"), self.root, "main", self.gh, self.board,
                        fake_claude(ok=False, result="I got stuck"))
@@ -250,6 +257,18 @@ class ReviewTest(Repo):
         self.assertIn("Address every point", run.calls[0][0])
         self.assertNotEqual(git(self.origin, "rev-parse", "shipit/issue-7"), before)  # pushed
         self.assertEqual(pr["state"], "MERGED")
+
+    def test_base_merged_in_before_the_agent(self):
+        (self.root / "later.py").write_text("x = 1\n", encoding="utf-8")
+        git(self.root, "add", "-A")
+        git(self.root, "-c", "user.email=a@b", "-c", "user.name=T", "commit", "-qm", "main moved on")
+        git(self.root, "push", "-q", "origin", "main")
+        answers = iter(["y", ""])
+        review.run(100, "x", self.root, self.gh, self.board, read=lambda _: next(answers),
+                   chat=self.chat, run_claude=fake_claude())
+        files = git(self.origin, "ls-tree", "--name-only", "shipit/issue-7").split()
+        self.assertIn("later.py", files)  # main is in the PR branch, so merging can't conflict
+        self.assertEqual(self.fake.prs[100]["state"], "OPEN")  # Enter: no merge
 
     def test_no_means_nothing_posted(self):
         out = review.run(100, "x", self.root, self.gh, self.board, read=lambda _: "no",

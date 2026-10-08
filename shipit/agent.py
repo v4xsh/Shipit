@@ -1,5 +1,7 @@
 """--agent N: Claude Code works my next issues in parallel, one worktree each, a PR at the end."""
+import re
 import threading
+from pathlib import Path
 
 from . import checks, claude, proc, worktree
 from .console import say, warn
@@ -18,8 +20,15 @@ The person who asked for it said: "{said}"
 
 Implement it. Keep the change small and focused and match the surrounding code. Add or update
 tests, run them ({test}), and when they pass commit everything with the message
-"{title} (#{number})". Don't push, don't open pull requests, don't edit voice-log.md.
+"{title} (#{number})".{trailer} Don't push, don't open pull requests, don't edit voice-log.md.
 End with a two-sentence summary of what you changed."""
+
+
+def trailer(root):
+    """Repos that keep a voice log sign every commit with the current prompt; agents do too."""
+    log = Path(root) / "voice-log.md"
+    nums = re.findall(r"^## Prompt (\d+)", log.read_text(encoding="utf-8"), re.M) if log.exists() else []
+    return f' End the commit message with a blank line, then "Voice prompt: {nums[-1]}".' if nums else ""
 
 
 class Run:
@@ -92,7 +101,8 @@ def work(number, item, root, base, gh, board, run_claude=claude.run):
         path = worktree.add(root, branch, base)
         run.status("branch created", branch)
         prompt = ISSUE.format(number=number, title=issue["title"], body=issue["body"],
-                              said=item["said"], test=checks.test_command(path) or "the tests")
+                              said=item["said"], test=checks.test_command(path) or "the tests",
+                              trailer=trailer(root))
         result = run.claude(prompt, path)
         if not result["ok"]:
             run.fail(f"the agent stopped ({result['result'][:80] or 'exit ' + str(result['code'])})",

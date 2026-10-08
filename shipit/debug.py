@@ -33,7 +33,7 @@ The confirmed cause: {title}
 Evidence: {evidence}
 
 Make the smallest fix, add a regression test, run the tests ({test}), and when they pass commit
-with the message "Fix: {bug}". Don't push. End with a two-sentence summary."""
+with the message "Fix: {bug}".{trailer} Don't push. End with a two-sentence summary."""
 
 VERDICT = re.compile(r"VERDICT:\s*(confirmed|ruled out)", re.I)
 EVIDENCE = re.compile(r"EVIDENCE:\s*(.+)", re.I)
@@ -85,7 +85,8 @@ def investigate(h, bug, root, base, board, run_claude=claude.run):
 def fix(h, bug, ramble, root, base, gh, board, run_claude=claude.run):
     run = agent.Run(h["id"], f"Fix: {h['title']}", board, run_claude)
     result = run.claude(FIX.format(bug=bug, title=h["title"], evidence=h["evidence"],
-                                   test=checks.test_command(h["path"]) or "the tests"), h["path"])
+                                   test=checks.test_command(h["path"]) or "the tests",
+                                   trailer=agent.trailer(root)), h["path"])
     if not result["ok"]:
         run.fail("the agent stopped", h["branch"])
         return None
