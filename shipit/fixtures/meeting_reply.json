@@ -1,0 +1,20 @@
+{
+  "recorded": "groq openai/gpt-oss-120b 2026-10-08",
+  "today": "2026-10-08",
+  "team": {
+    "me": "v4xsh",
+    "members": [
+      {
+        "login": "milap1afk",
+        "name": "milap1afk",
+        "aliases": []
+      },
+      {
+        "login": "v4xsh",
+        "name": "Vansh Dobhal",
+        "aliases": []
+      }
+    ]
+  },
+  "reply": "{\"items\":[{\"id\":\"i1\",\"section\":\"done\",\"title\":\"Ship review flow\",\"label\":\"feature\",\"assignee\":\"Vansh\",\"deadline\":null,\"depends_on\":[],\"said\":\"Kal maine the review flow ship kar diya, PR seven is merged.\",\"scratched\":false,\"changes\":[]},{\"id\":\"i2\",\"section\":\"next\",\"title\":\"Add meeting example to docs\",\"label\":\"chore\",\"assignee\":\"Vansh\",\"deadline\":\"2026-10-08\",\"depends_on\":[],\"said\":\"Today I'm adding a meeting example to the docs.\",\"scratched\":false,\"changes\":[]},{\"id\":\"i3\",\"section\":\"next\",\"title\":\"Fix board columns overflow on mobile\",\"label\":\"bug\",\"assignee\":\"Vansh\",\"deadline\":\"2026-10-09\",\"depends_on\":[],\"said\":\"After that I'll fix the board on mobile, the columns overflow on small screens, by Friday.\",\"scratched\":false,\"changes\":[]},{\"id\":\"i4\",\"section\":\"done\",\"title\":\"Deploy render\",\"label\":\"infra\",\"assignee\":\"Milap\",\"deadline\":null,\"depends_on\":[],\"said\":\"Render deploy ho gaya, it's live now.\",\"scratched\":false,\"changes\":[]},{\"id\":\"i5\",\"section\":\"next\",\"title\":\"Implement webhook retries\",\"label\":\"bug\",\"assignee\":\"Milap\",\"deadline\":\"2026-10-08\",\"depends_on\":[],\"said\":\"Aaj main webhook retries pe kaam karunga, they fail silently right now.\",\"scratched\":false,\"changes\":[]},{\"id\":\"i6\",\"section\":\"blocked\",\"title\":\"Get higher Groq rate limit for load test\",\"label\":\"infra\",\"assignee\":\"Milap\",\"deadline\":null,\"depends_on\":[],\"said\":\"And I'm blocked on the Groq rate limit for the load test, waiting for the higher tier.\",\"scratched\":false,\"changes\":[]},{\"id\":\"i7\",\"section\":\"next\",\"title\":\"Write release notes for 0.2\",\"label\":\"chore\",\"assignee\":\"Milap\",\"deadline\":\"2026-10-13\",\"depends_on\":[\"i3\"],\"said\":\"Cool. Milap, can you also take the release notes for 0.2, by Monday? Actually make that Tuesday.\",\"scratched\":false,\"changes\":[{\"field\":\"deadline\",\"from\":\"2026-10-12\",\"to\":\"2026-10-13\",\"said\":\"Actually make that Tuesday.\"}]}]}"
+}

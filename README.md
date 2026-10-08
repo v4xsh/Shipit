@@ -86,7 +86,7 @@ Shipit was built by voice: every prompt was dictated with Wispr Flow into Claude
 word, slips and all, with seconds spoken against typing time at 40 wpm. That's the chart at the top.
 
 <!-- stats -->
-**7 voice prompts → 26 commits → 91 tests.** [Read the voice log](voice-log.md), word for word.
+**7 voice prompts → 27 commits → 94 tests.** [Read the voice log](voice-log.md), word for word.
 <!-- /stats -->
 
 Every commit ends with the voice prompt that asked for it (`Voice prompt: 5`), including the commits

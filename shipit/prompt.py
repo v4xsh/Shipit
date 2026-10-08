@@ -31,14 +31,18 @@ Rules:
   "dates" table in the context; never compute weekdays yourself. Hindi "kal" with a
   future verb means tomorrow.
 - depends_on: ids of other items in this list that must finish first.
-- said: the exact words from the transcript this item came from, copied verbatim
-  (the original mention; correction words go in changes, not here).
+- said: the exact words from the transcript this item came from, copied verbatim: the whole
+  sentence of the original mention, never a fragment like "by Monday" (correction words go in
+  changes, not here).
 - Corrections apply to the item they point at, usually the previous one ("it", "that",
   "usko"). "scratch that" / "cancel that" / "rehne do": keep the item with
   "scratched": true. "actually make that Friday", "assign it to me", "no wait, Milap",
   "X will... no wait, Y": update the item and record EVERY change in "changes" (field is
   title, assignee, deadline, section or label; from/to are old/new values, a name the
   speaker abandoned is the "from"; said is the correction words, verbatim).
+- Meeting notes with speaker labels ("Milap: ...", "**Vansh:** ..."): first person (I, I'm,
+  main, maine, mujhe) means that line's speaker, so use the speaker's name as assignee; "me"
+  is only the person running Shipit (the "speaker" in the context) speaking for themselves.
 - Ignore filler (uh, okay so, basically, matlab). Don't invent work that wasn't said.
 - Items already drafted from git commits are listed; don't repeat them.
 - "open_issues" are already on GitHub. When an item is the same work as one of them, use
