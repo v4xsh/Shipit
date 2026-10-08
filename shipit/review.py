@@ -1,7 +1,7 @@
 """--review N: speak a review; it's written up, posted, addressed by an agent, then merged."""
 import json
 
-from . import agent, checks, claude, groq, items, worktree
+from . import agent, checks, claude, groq, items, proc, worktree
 from .console import say, warn
 from .github import GhError
 from .worktree import GitError
@@ -17,7 +17,7 @@ A reviewer asked for these changes:
 {points}
 
 Address every point. Keep the changes focused, run the tests ({test}), and when they pass
-commit with the message "Address review on #{number}". Don't push.
+commit with the message "Address review on #{number}".{trailer} Don't push.
 End with a short summary, one line per point."""
 
 YES = {"y", "yes", "haan", "ha", "ok", "post", "post it"}
@@ -55,6 +55,19 @@ def checkout(root, head):
     return worktree.add(root, head)
 
 
+def catch_up(path, pr, root):
+    """Merge the base branch in first, so the final merge can't conflict."""
+    base = pr["baseRefName"]
+    worktree.git(path, "fetch", "origin", base)
+    sign = agent.trailer(root).split('"')[1] if agent.trailer(root) else ""
+    message = f"Merge {base} into {pr['headRefName']}" + (f"\n\n{sign}" if sign else "")
+    try:
+        worktree.git(path, "merge", "--no-edit", "-m", message, f"origin/{base}")
+    except GitError:
+        proc.run(["git", "merge", "--abort"], cwd=path)
+        warn(f"{base} doesn't merge cleanly into the PR; the agent works on the branch as it is.")
+
+
 def run(number, said, root, gh, board, read=input, chat=groq.chat, run_claude=claude.run):
     pr = gh.pr(number)
     review = write_up(said, pr, chat)
@@ -75,11 +88,13 @@ def run(number, said, root, gh, board, read=input, chat=groq.chat, run_claude=cl
         return None
     try:
         path = checkout(root, pr["headRefName"])
+        catch_up(path, pr, root)
         run.status("branch ready", pr["headRefName"])
         start = worktree.git(path, "rev-parse", "HEAD")
         points = "\n".join(f"- {p}" for p in review["points"])
         result = run.claude(ADDRESS.format(number=number, title=pr["title"], points=points,
-                                           test=checks.test_command(path) or "the tests"), path)
+                                           test=checks.test_command(path) or "the tests",
+                                           trailer=agent.trailer(root)), path)
         if not result["ok"]:
             run.fail("the agent stopped", pr["headRefName"])
             return None
