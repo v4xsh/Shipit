@@ -48,7 +48,7 @@ def move(sentence, open_issues, team, chat=groq.chat):
         number, to = reply.get("number"), reply.get("to")
     except (groq.GroqError, ValueError, AttributeError):
         number, to = guess(sentence, issues)
-    issue = next((i for i in issues if i["number"] == number), None)
+    issue = next((i for i in issues if str(i["number"]) == str(number)), None)
     login = match.resolve(to, team)
     return (issue, login) if issue and login else None
 

@@ -3,7 +3,7 @@ import re
 import threading
 from pathlib import Path
 
-from . import checks, claude, proc, worktree
+from . import checks, claude, net, proc, worktree
 from .console import say, warn
 from .github import GhError
 from .worktree import GitError
@@ -94,10 +94,10 @@ def pick(done, found, me, n):
 
 
 def work(number, item, root, base, gh, board, run_claude=claude.run):
-    issue = gh.issue(number)
     branch = f"shipit/issue-{number}"
-    run = Run(f"#{number}", issue["title"], board, run_claude)
+    run = Run(f"#{number}", item["title"], board, run_claude)
     try:
+        issue = gh.issue(number)
         path = worktree.add(root, branch, base)
         run.status("branch created", branch)
         prompt = ISSUE.format(number=number, title=issue["title"], body=issue["body"],
@@ -110,8 +110,8 @@ def work(number, item, root, base, gh, board, run_claude=claude.run):
             return {"number": number, "branch": branch, "pr": None}
         url = deliver(run, root, path, branch, base, gh, f"{issue['title']} (#{number})",
                       lambda stat: pr_body(number, item["said"], result["result"], stat))
-    except (GitError, GhError) as e:
-        run.fail(str(e), branch)
+    except (GitError, GhError, OSError, ValueError, KeyError) as e:
+        run.fail(str(e) or e.__class__.__name__, branch)
         url = None
     return {"number": number, "branch": branch, "pr": url}
 
@@ -121,7 +121,11 @@ def parallel(jobs):
     results = [None] * len(jobs)
 
     def go(k, job):
-        results[k] = job()
+        try:
+            results[k] = job()
+        except Exception as e:  # one agent's surprise must not take the others (or the demo) down
+            with LOCK:
+                warn(f"An agent hit {e.__class__.__name__}: {e}")
 
     threads = [threading.Thread(target=go, args=(k, job)) for k, job in enumerate(jobs)]
     for t in threads:
@@ -140,6 +144,9 @@ def run_all(picks, root, gh, board, run_claude=claude.run):
     if not picks:
         say("No next issues assigned to you for the agent.")
         return []
+    if run_claude is claude.run and net.claude_missing():
+        warn(net.CLAUDE + " Your issues are on GitHub.")
+        return []
     base = worktree.current_branch(root)
     if gh.dry:
         for number, _ in picks:
@@ -150,6 +157,6 @@ def run_all(picks, root, gh, board, run_claude=claude.run):
     say(f"\nAgents on {', '.join(f'#{n}' for n, _ in picks)} (base {base})")
     results = parallel([lambda n=n, i=i: work(n, i, root, base, gh, board, run_claude)
                         for n, i in picks])
-    for r in results:
+    for r in filter(None, results):
         say(f"  #{r['number']}: " + (f"PR {r['pr']}" if r["pr"] else f"no PR, branch {r['branch']} kept"))
     return results

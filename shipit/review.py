@@ -1,7 +1,7 @@
 """--review N: speak a review; it's written up, posted, addressed by an agent, then merged."""
 import json
 
-from . import agent, checks, claude, groq, items, proc, worktree
+from . import agent, checks, claude, clipboard, groq, items, net, proc, worktree
 from .console import say, warn
 from .github import GhError
 from .worktree import GitError
@@ -80,8 +80,16 @@ def run(number, said, root, gh, board, read=input, chat=groq.chat, run_claude=cl
     if read("Post it and let the agent address it? [y/n] ").strip().lower().rstrip(".!") not in YES:
         say("Nothing posted.")
         return None
-    gh.pr_comment(number, text)
+    try:
+        gh.pr_comment(number, text)
+    except GhError as e:
+        copied = clipboard.copy(text)
+        warn(f"{e}. The review is printed above" + (" and on your clipboard." if copied else "."))
+        return None
     say(f"  ✎ commented on {pr['url']}")
+    if run_claude is claude.run and net.claude_missing():
+        warn(net.CLAUDE + " The review is posted; address it by hand.")
+        return "posted"
     run = agent.Run(f"PR #{number}", pr["title"], board, run_claude)
     if gh.dry:
         say(f"  (dry run) claude -p would address the review on {pr['headRefName']}")

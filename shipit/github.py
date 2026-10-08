@@ -7,7 +7,7 @@ import json
 import re
 import subprocess
 
-from . import proc
+from . import net, proc
 from .console import say
 
 
@@ -28,11 +28,17 @@ class Gh:
         code, out, err = self.run(["gh", *args], input=input)
         if code:
             lines = (err or "").strip().splitlines()
-            raise GhError(lines[-1] if lines else f"gh {args[0]} failed")
+            raise GhError(net.gh_problem(err) or (lines[-1] if lines else f"gh {args[0]} failed"))
         return out
 
     def json(self, args):
-        return json.loads(self.call(args) or "null")
+        """A read. In a dry run a failed read counts as empty, so planning still works."""
+        try:
+            return json.loads(self.call(args) or "null")
+        except (GhError, ValueError):
+            if self.dry:
+                return None
+            raise
 
     # Reads
     def open_issues(self):
@@ -41,19 +47,20 @@ class Gh:
 
     def find_issue(self, title):
         found = self.json(["issue", "list", "-R", self.slug, "--state", "all", "--search",
-                           f'"{title}" in:title', "--json", "number,title"])
+                           f'"{title}" in:title', "--json", "number,title"]) or []
         return next((i["number"] for i in found if i["title"] == title), None)
 
     def labels(self):
         return {l["name"] for l in self.json(["label", "list", "-R", self.slug, "--limit", "200",
-                                              "--json", "name"])}
+                                              "--json", "name"]) or []}
 
     def milestones(self):
         return {m["title"] for m in self.json(["api", f"repos/{self.slug}/milestones?state=all"
-                                                      "&per_page=100"])}
+                                                      "&per_page=100"]) or []}
 
     def body(self, number):
-        return self.json(["issue", "view", str(number), "-R", self.slug, "--json", "body"])["body"]
+        return (self.json(["issue", "view", str(number), "-R", self.slug, "--json", "body"])
+                or {"body": ""})["body"]
 
     # Writes
     def create_label(self, name, color, description):

@@ -2,11 +2,14 @@
 import argparse
 import datetime
 import sys
+import traceback
 from pathlib import Path
 
-from . import __version__, agent, cards, debug, env, flow, gitlog, live, parser, proc, replay, repo, review, ship, state, team
+from . import (__version__, agent, cards, debug, env, flow, gitlog, groq, live, net, parser, proc, replay,
+               repo, review, ship, state, team)
 from .console import Oops, say, setup, warn
 from .github import Gh, GhError
+from .worktree import GitError
 
 
 def args(argv):
@@ -45,12 +48,20 @@ def listen(opts):
 def open_board(opts):
     if opts.no_board:
         return live.NoBoard()
-    board = live.Board(opts.port)
+    try:
+        board = live.Board(opts.port)
+    except OSError:
+        warn("Couldn't start the board, so this run stays in the terminal.")
+        return live.NoBoard()
     say(f"Live board: {board.url}")
     return board
 
 
-def hear(opts, root, crew, before, board, open_titles=()):
+def offline_chat(messages):
+    raise groq.GroqError("Offline")
+
+
+def hear(opts, root, crew, before, board, open_titles=(), offline=False):
     """Steps 1-4: commits and speech become items on the board."""
     email = proc.run(["git", "config", "user.email"], cwd=root)[1].strip() or None
     drafts = gitlog.drafts(root, crew["me"], before["last_commit"], email)
@@ -62,9 +73,10 @@ def hear(opts, root, crew, before, board, open_titles=()):
         raise Oops("Nothing said and no new commits. Nothing to ship.")
     board.transcript(transcript)
     board.status("parsing")
-    result = parser.parse(transcript, crew, drafts, open_titles=open_titles) if transcript else {
-        "items": drafts, "source": "git", "notes": []}
-    for note in result["notes"]:
+    chat = offline_chat if offline else groq.chat
+    result = ({"items": drafts, "source": "git", "notes": []} if not transcript
+              else parser.parse(transcript, crew, drafts, chat=chat, open_titles=open_titles))
+    for note in [] if offline else result["notes"]:  # offline was already said, once
         warn(note)
     board.items(result["items"])
     board.status("ready")
@@ -76,10 +88,18 @@ def start(opts, board, mode="standup"):
     root = repo.root()
     env.load(root)
     slug = repo.origin(root)
-    crew = team.load(root, slug)
+    offline = not net.online()
+    if offline:
+        warn(net.OFFLINE)
+    crew = team.load(root, slug, offline=offline)
     say(f"Shipit · {slug} · {len(crew['members'])} on the team")
     board.run(slug, crew, mode=mode)
-    return root, crew, Gh(slug, dry_run=opts.dry_run)
+    return root, crew, Gh(slug, dry_run=opts.dry_run), offline
+
+
+def online_only(offline, what):
+    if offline:
+        raise Oops(f"{what} needs the internet (Groq, GitHub, Claude). For an offline demo: shipit --replay")
 
 
 def spoken(opts, board, prompt):
@@ -93,13 +113,15 @@ def spoken(opts, board, prompt):
 
 
 def run_debug(opts, board):
-    root, crew, gh = start(opts, board, mode="debug")
+    root, crew, gh, offline = start(opts, board, mode="debug")
+    online_only(offline, "--debug")
     ramble = spoken(opts, board, "Ramble about the bug: what you saw, what you suspect.")
     debug.run(ramble, root, gh, board)
 
 
 def run_review(opts, board):
-    root, crew, gh = start(opts, board, mode="review")
+    root, crew, gh, offline = start(opts, board, mode="review")
+    online_only(offline, "--review")
     pr = gh.pr(opts.review)
     say(f"PR #{pr['number']} {pr['title']}  {pr['url']}")
     said = spoken(opts, board, "Speak your review:")
@@ -107,16 +129,16 @@ def run_review(opts, board):
 
 
 def run(opts, board):
-    root, crew, gh = start(opts, board)
+    root, crew, gh, offline = start(opts, board)
     before = state.load(root)
-    open_issues = flow.read_open(gh)
+    open_issues = [] if offline else flow.read_open(gh)
     titles = [i["title"] for i in open_issues if i["title"] != ship.LOG_TITLE]
-    transcript, found = hear(opts, root, crew, before, board, titles)
+    transcript, found = hear(opts, root, crew, before, board, titles, offline)
     found, plan = flow.agree(found, gh, crew, board, open_issues=open_issues)
     if found is None:
         say("Nothing touched GitHub.")
         return None
-    done = flow.deliver(plan, gh, board, flow.today())
+    done = flow.deliver(plan, gh, board, flow.today(), offline=offline)
     if done is None:
         return None
     stats = flow.finish(transcript, found, done, before, board)
@@ -150,10 +172,27 @@ def main(argv=None):
     except Oops as e:
         warn(str(e))
         return 1
+    except GitError as e:
+        warn(f"Git said no: {e}")
+        return 1
     except (KeyboardInterrupt, EOFError):
         warn("Stopped.")
         return 130
+    except Exception as e:  # never a traceback on camera
+        warn(f"Something unexpected broke ({e.__class__.__name__}: {e}). Details: {crash_log()}")
+        return 1
     return 0
+
+
+def crash_log():
+    """Write the traceback to .shipit/crash.log for later, and say where."""
+    path = Path(".shipit") / "crash.log"
+    try:
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(traceback.format_exc(), encoding="utf-8")
+        return str(path)
+    except OSError:
+        return "(couldn't write .shipit/crash.log)"
 
 
 def entry():

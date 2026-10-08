@@ -1,7 +1,7 @@
 """Thin wrappers over the gh CLI. Each returns None on failure instead of raising."""
 import json
 
-from . import proc
+from . import net, proc
 
 
 def api(path):
@@ -14,8 +14,18 @@ def api(path):
         return None
 
 
+LAST = {"err": ""}
+
+
 def authed():
-    return proc.run(["gh", "auth", "status"])[0] == 0
+    code, _, err = proc.run(["gh", "auth", "status"])
+    LAST["err"] = err
+    return code == 0
+
+
+def why():
+    """Why the last authed() failed, in one plain sentence."""
+    return net.gh_problem(LAST["err"]) or "gh isn't logged in. Run: gh auth login"
 
 
 def me():

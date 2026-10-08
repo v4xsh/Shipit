@@ -2,7 +2,7 @@
 import json
 import re
 
-from . import agent, checks, claude, groq, items, proc, worktree
+from . import agent, checks, claude, groq, items, net, proc, worktree
 from .console import say, warn
 from .github import GhError
 from .worktree import GitError
@@ -105,6 +105,10 @@ def run(ramble, root, gh, board, read=input, chat=groq.chat, run_claude=claude.r
     bug, hyps = extract(ramble, chat)
     say(f"\nBug: {bug}")
     board.items([items.make(h["id"], "next", h["title"], h["said"], label="bug") for h in hyps])
+    if run_claude is claude.run and net.claude_missing():
+        warn(net.CLAUDE + " The hypotheses are on the board to check by hand.")
+        board.status("ready")
+        return [{**h, "verdict": "unchecked"} for h in hyps], []
     board.status("shipping")
     base = worktree.current_branch(root)
     checked = agent.parallel([lambda h=h: investigate(h, bug, root, base, board, run_claude)

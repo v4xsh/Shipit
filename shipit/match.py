@@ -16,7 +16,7 @@ def keys(member):
 
 def resolve(spoken, team):
     """Return a login or None when nobody is a confident match."""
-    said = (spoken or "").strip().lower().lstrip("@")
+    said = str(spoken or "").strip().lower().lstrip("@")
     if not said:
         return None
     if said in ME:

@@ -11,7 +11,10 @@ def path(root):
 
 def load(root):
     p = path(root)
-    data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    except ValueError:
+        data = {}  # a broken state file only costs the running totals, never the run
     return {**DEFAULT, **data}
 
 

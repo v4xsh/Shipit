@@ -138,7 +138,7 @@ class FailureTest(unittest.TestCase):
 
     def test_gh_error_message(self):
         gh = Gh("o/r", run=lambda *a, **k: (1, "", "gh: not logged in\n"))
-        with self.assertRaisesRegex(GhError, "not logged in"):
+        with self.assertRaisesRegex(GhError, "gh auth login"):
             gh.open_issues()
 
 

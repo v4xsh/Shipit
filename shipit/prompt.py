@@ -16,7 +16,7 @@ Rules:
   next = will do.
 - "X blocks on Y" / "X is waiting on Y" / "X atka hai Y pe": add a separate blocked item for
   what X waits on (e.g. "Get Render API keys"), assigned to X. Don't change X's other
-  items or their depends_on.
+  items or their depends_on. "Blocked on X, waiting for Y" is one blocked item, not two.
 - "A can't start till B is done" / "A ke liye pehle B": A is blocked and A.depends_on
   has B's id. B keeps its own section (usually next). Never mark B blocked for this.
 - label: bug (something broken or flaky to fix, so "fixed X" is a bug), feature (new capability users see),

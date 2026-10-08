@@ -47,12 +47,15 @@ def handler(hub):
 
 def start(hub, port=7878):
     """Start in a daemon thread; falls back to any free port. Returns the server."""
+    server = None
     for p in (port, 0):
         try:
             server = ThreadingHTTPServer(("127.0.0.1", p), handler(hub))
             break
         except OSError:
             continue
+    if server is None:
+        raise OSError("no free port for the board")
     server.daemon_threads = True
     threading.Thread(target=server.serve_forever, daemon=True).start()
     return server

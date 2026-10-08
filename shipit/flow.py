@@ -39,19 +39,26 @@ def agree(found, gh, crew, board, read=input, today=None, open_issues=None):
         say("\n" + cards.board(found))
 
 
-def deliver(p, gh, board, today):
+def handover(p, board, today, why):
+    """GitHub is out of reach: one friendly line, the issues as Markdown, and on the clipboard."""
+    md = ship.markdown(p, today)
+    copied = clipboard.copy(md)
+    warn(f"{why} Here are the issues as Markdown" + (", also on your clipboard." if copied else "."))
+    say(md)
+    board.status("cancelled")
+
+
+def deliver(p, gh, board, today, offline=False):
     """Run the plan. On a GitHub failure, hand over Markdown instead of dying."""
+    if offline:
+        handover(p, board, today, "Still offline, so nothing went to GitHub.")
+        return None
     board.status("shipping")
     try:
         done = ship.execute(p, gh, today,
                             on_issue=lambda i, n: board.issue(i["id"], n, gh.url(n)))
     except GhError as e:
-        md = ship.markdown(p, today)
-        copied = clipboard.copy(md)
-        warn(f"GitHub said no ({e}). Here are the issues as Markdown"
-             + (", also on your clipboard." if copied else "."))
-        say(md)
-        board.status("cancelled")
+        handover(p, board, today, f"GitHub said no: {e}.")
         return None
     board.status("shipped")
     for i, n in done["opened"]:

@@ -24,7 +24,7 @@ def show_time(text, items):
     return 1.2 + len(text.split()) * 0.035 + len(items) * 0.3 + changes * 1.6 + scratched * 2.2 + 2
 
 
-def run(board, sleep=time.sleep, hold=5):
+def run(board, sleep=time.sleep, hold=3):
     data, replies = load()
     team, today = data["team"], datetime.date.fromisoformat(data["today"])
     for n, (text, reply) in enumerate(zip(data["standups"], replies), 1):

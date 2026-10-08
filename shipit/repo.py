@@ -9,6 +9,8 @@ REMOTE = re.compile(r"github\.com[:/]+([^/]+)/([^/]+?)(?:\.git)?/?$")
 
 def root(cwd=None):
     code, out, _ = proc.run(["git", "rev-parse", "--show-toplevel"], cwd=cwd)
+    if code == 127:
+        raise Oops("Git isn't installed. Get it at https://git-scm.com")
     if code:
         raise Oops("Not inside a Git repo. cd into one and try again.")
     return out.strip()

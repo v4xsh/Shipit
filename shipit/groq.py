@@ -32,7 +32,7 @@ def rate_limit_wait(error, longest=15):
     return wait if wait <= longest else None
 
 
-def chat(messages, transport=post, timeout=30):
+def chat(messages, transport=post, timeout=20):
     """Send messages, return the reply text (a JSON string)."""
     key = os.environ.get("GROQ_API_KEY")
     if not key:
@@ -54,9 +54,12 @@ def chat(messages, transport=post, timeout=30):
         detail = e.read().decode("utf-8", "replace")
         if e.code == 429:
             raise GroqError("Groq is rate-limiting us")
+        if e.code in (401, 403):
+            raise GroqError(f"Groq rejected the key ({e.code}): check GROQ_API_KEY in .env")
         raise GroqError(f"Groq said {e.code}", bad_json="json_validate_failed" in detail)
     except (urllib.error.URLError, TimeoutError, OSError, ValueError) as e:
-        raise GroqError(f"Couldn't reach Groq ({e.__class__.__name__})")
+        raise GroqError("Couldn't reach Groq (offline?)" if isinstance(e, urllib.error.URLError)
+                        else f"Groq didn't answer in time ({e.__class__.__name__})")
     try:
         return data["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError):
