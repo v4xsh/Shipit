@@ -145,9 +145,9 @@ That was our prompt number 3. Go ahead and build it.
 ## Prompt 4
 - Time: 2026-10-07 23:13
 - Words: 288
-- Spoken: ? s
+- Spoken: 98 s
 - Typing: 432 s
-- Saved: ? s
+- Saved: 334 s
 
 ```text
 prompt 3 took 103 seconds.
@@ -167,4 +167,40 @@ Now, step 7: the agent + debug and review.
 - `shipit -agent 1` on this repo. Let the agent take a small real issue and show me that PR it's open.
 - Commit.
 That was our prompt 4. Go ahead and build it.
+```
+
+## Prompt 5
+- Time: 2026-10-08 13:17
+- Words: 325
+- Spoken: ? s
+- Typing: 488 s
+- Saved: ? s
+
+```text
+Prompt 4 took 98 seconds. Agent used the current prompt number in their commits. Fix the leading spaces on line 1 of CLAUDE.md if it's not done. That was a deletion slip.
+Now run the two modes for real:
+1. `--review 7`. The review looks good. Also print the version in the board header, then merge it. Take it through comments, agent fix, test, and merge, and show me.
+2. `--debug`. Plant a small real bug in the chart script, like save minute going negative when spoken time is missing. Then feed this ramble: chart shows negative save time. Maybe the parser reads the question mark as zero, or maybe the subtraction is backward, or the hook runs before the log is written. Let the hypothesis race and fix it with the PR.
+Then step it: the docs side.
+A docs folder with:
+- a static site for GitHub Pages
+- a landing page with tagline
+- a 60-second install
+- How It Works section with one screenshot per step
+- a command page for every flag
+- a Built by Voice page with the chart, the per-prompt table, and the full voice log rendered
+- a link to the repo
+Same dark style as the board. Take the screenshot yourself with headless Edge from the replay board, a terminal confirm card, and the GitHub issue and the PR pages via GH, and save them in docs/image-enabled pages on the repo with `gh` API from the docs folder on `main`.
+Then the README:
+- tagline
+- a hero screenshot of the board at the top under the chart
+- Try It 2 Minutes
+- the commands
+- How This Was Built
+- line that mouse and enter were used only for approvals
+- Prompt and Commits
+- Test Count
+- a link to the voice log
+- Run Thus
+End side: run everything, commit, push, and that was prompt 5. Go ahead and build it.
 ```
