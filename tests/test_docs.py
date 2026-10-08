@@ -57,6 +57,34 @@ class DocsTest(unittest.TestCase):
         self.assertIn("&lt;b&gt;hi&lt;/b&gt; &amp; bye", page)
 
 
+class SectionsTest(unittest.TestCase):
+    README = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    def test_from_a_meeting(self):
+        commands = (DOCS / "commands.html").read_text(encoding="utf-8")
+        for text in (self.README, commands):
+            for bit in ("--from-notes", "examples/meeting.md", "Notetaker", "Mac only", "Windows"):
+                self.assertIn(bit, text)
+        self.assertIn("## From a meeting", self.README)
+        self.assertIn('id="meeting"', commands)
+        self.assertTrue((ROOT / "examples" / "meeting.md").exists())
+
+    def test_notes_for_wispr_quote_the_real_log(self):
+        notes = self.README.split("## Notes for the Wispr team")[1].split("\n## ")[0]
+        self.assertEqual(len(re.findall(r"^\d\. \*\*", notes, re.M)), 5)
+        log = (ROOT / "voice-log.md").read_text(encoding="utf-8")
+        for heard in ("Grok returns bad JSON", "Did up", "CHO R1", "Tender", "Milab", "claude-p",
+                      "working trees", "codes the spoken line", "37. 1. repo, team, and state"):
+            self.assertIn(heard, notes)
+            self.assertIn(heard, log)  # every mishear quoted is really in the log
+        self.assertEqual(log.count("Grok"), 10)  # "ten times"
+
+    def test_failures_and_fallbacks_documented(self):
+        for bit in ("never a traceback", "clipboard", "keyword splitter", "Claude Code is missing",
+                    "offline", "crash.log", "python -m shipit"):
+            self.assertIn(bit, self.README)
+
+
 class StatsTest(unittest.TestCase):
     def test_counts_and_embed(self):
         prompts, commits, tests = stats.counts()
@@ -65,6 +93,11 @@ class StatsTest(unittest.TestCase):
         self.assertGreaterEqual(prompts, 6)
         readme = "a\n<!-- stats -->\nold\n<!-- /stats -->\nb"
         self.assertEqual(stats.embed(readme, "new"), "a\n<!-- stats -->\nnew\n<!-- /stats -->\nb")
+
+    def test_no_keys_in_the_repo(self):
+        example = (ROOT / ".env.example").read_text(encoding="utf-8")
+        self.assertRegex(example, r"(?m)^GROQ_API_KEY=\s*$")
+        self.assertIn(".env", (ROOT / ".gitignore").read_text(encoding="utf-8").split())
 
     def test_entry_point(self):
         pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")

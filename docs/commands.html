@@ -23,7 +23,7 @@
     <pre>shipit --text "Kal maine login fix kiya. Milap takes the balance bug by Friday."</pre></div>
 
   <div class="card flag"><h3><code>--from-notes FILE</code></h3>
-    <p>Feed a meeting transcript. One meeting becomes issues for everyone mentioned.</p>
+    <p>Feed a meeting transcript. One meeting becomes issues for everyone mentioned. <a href="#meeting">From a meeting →</a></p>
     <pre>shipit --from-notes sync-notes.txt</pre></div>
 
   <div class="card flag"><h3><code>--dry-run</code></h3>
@@ -69,11 +69,39 @@
     <pre>shipit --help</pre></div>
 </section>
 
+<section id="meeting">
+  <h2>From a meeting</h2>
+  <div class="card">
+  <p>Standups often happen in a call. <code>--from-notes</code> takes the meeting transcript and does the
+  same thing as a spoken standup: one confirm card, issues for <b>everyone</b> mentioned, each quoting what
+  was said. Speaker labels matter: “main kar dunga” on Milap's line is Milap's work, not yours.</p>
+  <p><a href="https://wisprflow.ai">Wispr Flow's Notetaker</a> is the natural source.
+  Its MCP server is Mac only today, so on Windows you export the meeting notes and pass the file.</p>
+<pre><span class="c"># a two-person standup between Vansh and Milap: issues for both</span>
+shipit --from-notes examples/meeting.md --dry-run
+shipit --from-notes examples/meeting.md</pre>
+  <p class="muted">The <a href="https://github.com/v4xsh/Shipit/blob/main/examples/meeting.md">sample</a>
+  gives Vansh the mobile fix (by Friday), and gives Milap the webhook retries, a blocked Groq-tier item, and the
+  release notes (“by Monday, actually make that Tuesday”), which wait on the mobile fix.</p>
+  </div>
+</section>
+
 <section>
   <h2>Environment</h2>
-  <p class="muted"><code>GROQ_API_KEY</code> (required for parsing; put it in your repo's gitignored
-  <code>.env</code>), <code>GROQ_MODEL</code> (default <code>openai/gpt-oss-120b</code>),
-  <code>SHIPIT_TEST_CMD</code> (how agents' work is tested; auto-detected otherwise).</p>
+  <p class="muted"><code>GROQ_API_KEY</code> in your repo's gitignored <code>.env</code> (UTF-8 or
+  PowerShell's UTF-16, both fine). Without it, a simple keyword splitter parses instead and says so.
+  <code>GROQ_MODEL</code> (default <code>openai/gpt-oss-120b</code>), <code>SHIPIT_TEST_CMD</code> (how agents'
+  work is tested; auto-detected otherwise). If <code>shipit</code> isn't on your PATH, use
+  <code>python -m shipit</code>.</p>
+</section>
+
+<section>
+  <h2>When something fails</h2>
+  <p class="muted">Shipit never shows a traceback. GitHub unreachable, <code>gh</code> missing or logged out:
+  one line, and the issues as Markdown on your clipboard. Groq down or the key rejected: one line, and the
+  keyword splitter. Claude Code missing: one line, and no branches are created. Offline: said once at the
+  start, then straight to those fallbacks. Anything else: one line, details in
+  <code>.shipit/crash.log</code>.</p>
 </section>
 </main>
 <footer class="wrap">Shipit · Python stdlib · <a href="https://github.com/v4xsh/Shipit">github.com/v4xsh/Shipit</a></footer>
