@@ -86,6 +86,17 @@ matter: "main kar dunga" on Milap's line is Milap's work, not yours.
 It gives both of them issues: Vansh's mobile fix by Friday; Milap's webhook retries, his Groq-tier
 blocker and the release notes ("by Monday, actually make that Tuesday") that wait on the mobile fix.
 
+A short example: any text file with speaker labels works. Save this as `notes.md`:
+
+```md
+**Vansh:** I'll fix the board on mobile by Friday.
+**Milap:** Aaj main webhook retries pe kaam karunga.
+```
+
+```sh
+shipit --from-notes notes.md --dry-run   # one issue for Vansh, one for Milap
+```
+
 ## How it works
 
 1. **Speak.** Shipit finds the repo and team (`gh`), drafts your done list from `git log`, and
@@ -112,7 +123,7 @@ Shipit was built by voice: every prompt was dictated with Wispr Flow into Claude
 word, slips and all, with seconds spoken against typing time at 40 wpm. That's the chart at the top.
 
 <!-- stats -->
-**9 voice prompts → 31 commits → 117 tests.** [Read the voice log](voice-log.md), word for word.
+**9 voice prompts → 33 commits → 118 tests.** [Read the voice log](voice-log.md), word for word.
 <!-- /stats -->
 
 The Wispr Flow account used for this build was created through the HH Goa (Hacker House Goa)
