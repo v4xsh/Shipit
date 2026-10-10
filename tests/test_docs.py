@@ -69,6 +69,18 @@ class SectionsTest(unittest.TestCase):
         self.assertIn('id="meeting"', commands)
         self.assertTrue((ROOT / "examples" / "meeting.md").exists())
 
+    def test_from_notes_example_is_real(self):
+        section = self.README.split("## From a meeting")[1].split("\n## ")[0]
+        line = "**Milap:** Aaj main webhook retries pe kaam karunga, they fail silently right now."
+        self.assertIn(f"```md\n{line}\n```", section)
+        notes = " ".join((ROOT / "examples" / "meeting.md").read_text(encoding="utf-8").split())
+        said = line.split(":** ")[1]
+        self.assertIn(said, notes.split("**Milap:**")[1])  # Milap really says it in the notes
+        reply = (ROOT / "shipit" / "fixtures" / "meeting_reply.json").read_text(encoding="utf-8")
+        for bit in ("Implement webhook retries", said):
+            self.assertIn(bit, section)
+            self.assertIn(bit, reply)  # and the issue shown is what the model really returned
+
     def test_notes_for_wispr_quote_the_real_log(self):
         notes = self.README.split("## Notes for the Wispr team")[1].split("\n## ")[0]
         self.assertEqual(len(re.findall(r"^\d\. \*\*", notes, re.M)), 5)

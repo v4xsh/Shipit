@@ -79,6 +79,15 @@ shipit --from-notes examples/meeting.md --dry-run   # see the plan, nothing writ
 shipit --from-notes examples/meeting.md             # yes on the card, and it's on GitHub
 ```
 
+For example, this sentence of Milap's in the notes:
+
+```md
+**Milap:** Aaj main webhook retries pe kaam karunga, they fail silently right now.
+```
+
+becomes the `bug` issue "Implement webhook retries", assigned to Milap, ending with
+`Said: "Aaj main webhook retries pe kaam karunga, they fail silently right now."`
+
 [Wispr Flow's Notetaker](https://wisprflow.ai) is the natural source. Its MCP server is Mac only today,
 so on Windows you export the meeting notes and pass the file. Speaker labels (`**Milap:** ...`)
 matter: "main kar dunga" on Milap's line is Milap's work, not yours.
@@ -112,7 +121,7 @@ Shipit was built by voice: every prompt was dictated with Wispr Flow into Claude
 word, slips and all, with seconds spoken against typing time at 40 wpm. That's the chart at the top.
 
 <!-- stats -->
-**9 voice prompts → 31 commits → 117 tests.** [Read the voice log](voice-log.md), word for word.
+**9 voice prompts → 32 commits → 118 tests.** [Read the voice log](voice-log.md), word for word.
 <!-- /stats -->
 
 The Wispr Flow account used for this build was created through the HH Goa (Hacker House Goa)
