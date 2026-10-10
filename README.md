@@ -19,6 +19,8 @@
 
 **Say it. It's tracked. It's started.**
 
+**Demo video:** [Watch the demo](https://www.youtube.com/watch?v=3wO73nH2L4Y)
+
 Shipit is a command-line tool for developers. Instead of typing a standup, you talk, and it ships:
 GitHub issues with labels, owners, deadlines and dependencies, a live board in your browser, and
 Claude Code agents that turn your next issues into pull requests.

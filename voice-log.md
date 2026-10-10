@@ -249,3 +249,5 @@ Again, log this as prompt 7, the previous one, and this as prompt 8. No need to 
 
 Finally, push and check if there is nothing like this. Everything, everywhere, should show HH Goa, not anything else like you did.
 ```
+
+Note (2026-10-10, not a numbered prompt): the demo video link was added to the README, right under the tagline.
