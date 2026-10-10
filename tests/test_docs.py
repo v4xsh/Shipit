@@ -69,6 +69,13 @@ class SectionsTest(unittest.TestCase):
         self.assertIn('id="meeting"', commands)
         self.assertTrue((ROOT / "examples" / "meeting.md").exists())
 
+    def test_from_notes_short_example(self):
+        meeting = self.README.split("## From a meeting")[1].split("\n## ")[0]
+        self.assertIn("A short example", meeting)
+        self.assertIn("shipit --from-notes notes.md --dry-run", meeting)
+        for speaker in ("**Vansh:**", "**Milap:**"):  # the labels the parser reads
+            self.assertIn(speaker, meeting.split("```md")[1].split("```")[0])
+
     def test_notes_for_wispr_quote_the_real_log(self):
         notes = self.README.split("## Notes for the Wispr team")[1].split("\n## ")[0]
         self.assertEqual(len(re.findall(r"^\d\. \*\*", notes, re.M)), 5)
