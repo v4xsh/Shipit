@@ -25,6 +25,10 @@ class ChartTest(unittest.TestCase):
         self.assertEqual(ROWS[0], (0, 100, 60.0, 150.0))
         self.assertEqual(ROWS[2], (2, 50, None, 75.0))
 
+    def test_minor_cleanup_prompts_stay_off_the_chart(self):
+        log = LOG + "## Prompt 3\n- Words: 9\n- Spoken: ? s\n- Typing: 14 s\n- Chart: no (minor cleanup)\n"
+        self.assertEqual(parse_log(log), ROWS)
+
     def test_totals_skip_unknown_spoken(self):
         self.assertEqual(totals(ROWS), (3.0, 7.5, 4.5))
 

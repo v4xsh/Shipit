@@ -1,6 +1,7 @@
 # Voice log
 
 Typing time assumes 40 wpm. Saved = typing − spoken. `?` = not given yet.
+`Chart: no` marks a minor cleanup prompt: logged here, left off the chart.
 
 ## Prompt 0
 - Time: 2026-10-07 12:10
@@ -208,9 +209,9 @@ End side: run everything, commit, push, and that was prompt 5. Go ahead and buil
 ## Prompt 6
 - Time: 2026-10-08 18:03
 - Words: 256
-- Spoken: ? s
+- Spoken: 100 s
 - Typing: 384 s
-- Saved: ? s
+- Saved: 284 s
 
 ```text
 Prompt 5 took 109 seconds. This is the final pass.
@@ -219,4 +220,32 @@ Prompt 5 took 109 seconds. This is the final pass.
 3. Add a section to the README called "Notes for the Wispr team" with 5 real friction points from dictating into Claude code during this build, taken from the mishears in the voice-log, like Grok heard as Grok, didup as didup, core as ch1, and one or two things that could have helped, like a dictionary for repo words or a command to send the prompt.
 4. In how this was built, state the account was created through the HSGOR fielding. The Wispr Flow history matches the voice-log.
 5. Update counts everywhere and make sure the chart and site regenerate. No keys anywhere in the history. .env.example is blank. Run all tests, commit, push, and that was prompt 6. Go ahead.
+```
+
+## Prompt 7
+- Time: 2026-10-10 19:20
+- Words: 59
+- Spoken: ? s
+- Typing: 88 s
+- Saved: ? s
+- Chart: no (minor cleanup)
+
+```text
+Prompt 6 took 100 seconds. Fill it in. If the HCL Gua referral line isn't in how this was built yet, add it. Log this message as part of prompt 7 entry in the voice log, not as a new prompt, so the chart doesn't get an extra bar for this one. Update the counts, commit, push. Go ahead.
+```
+
+## Prompt 8
+- Time: 2026-10-10 19:34
+- Words: 94
+- Spoken: ? s
+- Typing: 141 s
+- Saved: ? s
+- Chart: no (minor cleanup)
+
+```text
+fix the README. It's not HCLGUVA referral or anything like that, and it's actually HH Goa, which is Hacker House Goa referral, so fix that part. It's Hacker House Goa.
+
+Again, log this as prompt 7, the previous one, and this as prompt 8. No need to update 8 and 7 on the bar because the bar will have till 6 because those were the major ones. These are just minor cleanups.
+
+Finally, push and check if there is nothing like this. Everything, everywhere, should show HH Goa, not anything else like you did.
 ```

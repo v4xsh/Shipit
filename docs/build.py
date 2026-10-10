@@ -71,6 +71,8 @@ def voice_page(text):
 <p class="lead">Every prompt that built Shipit was dictated with Wispr Flow into Claude Code. Mouse and Enter were
 used only for approvals. {spoken:.1f} minutes of talking replaced {typed:.1f} minutes of typing at 40 wpm:
 <b style="color:var(--done)">{saved:.1f} minutes saved</b>.</p>
+<p class="muted">The Wispr Flow account used for this build was created through the HH Goa (Hacker House Goa)
+referral, and its history matches the log below, prompt for prompt.</p>
 <section><img class="shot" src="chart.svg" alt="Spoken vs typed minutes per prompt"></section>
 <section><h2>Per prompt</h2>{table(rows)}</section>
 <section><h2>The full voice log</h2><p class="muted">Word for word, as transcribed, slips and all.

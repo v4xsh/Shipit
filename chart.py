@@ -20,6 +20,8 @@ def parse_log(text):
     """Return [(prompt_no, words, spoken_seconds_or_None, typing_seconds)]."""
     rows = []
     for block in re.split(r"^## Prompt ", text, flags=re.M)[1:]:
+        if re.search(r"^- Chart: no", block, re.M):
+            continue  # a minor cleanup prompt: in the log, not on the chart
         field = lambda name: re.search(rf"^- {name}: (\S+)", block, re.M).group(1)
         spoken = field("Spoken")
         rows.append((int(block.split()[0]), int(field("Words")),
